@@ -9,7 +9,7 @@ import java.io.RandomAccessFile;
 import java.util.UUID;
 
 /**
- * Created by DEV-1 on 1/24/2018.
+ * Created by Iker Redondo on 1/24/2018.
  */
 
 public class Installation {

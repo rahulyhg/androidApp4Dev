@@ -1,5 +1,7 @@
 package com.desertstar.noropefisher;
-
+/**
+ * Created by Iker Redondo on 1/17/2018.
+ */
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;

@@ -8,7 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
 
 /**
- * Created by DEV-1 on 1/17/2018.
+ * Created by Iker Redondo on 1/17/2018.
  */
 
 

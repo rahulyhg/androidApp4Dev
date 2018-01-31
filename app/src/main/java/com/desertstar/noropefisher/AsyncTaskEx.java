@@ -3,7 +3,7 @@ package com.desertstar.noropefisher;
 import android.os.AsyncTask;
 
 /**
- * Created by DEV-1 on 1/22/2018.
+ * Created by Iker Redondo on 1/22/2018.
  */
 
 public class AsyncTaskEx extends AsyncTask<Void, Void, Void> {

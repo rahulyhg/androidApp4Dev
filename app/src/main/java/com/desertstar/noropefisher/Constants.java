@@ -1,7 +1,7 @@
 package com.desertstar.noropefisher;
 
 /**
- * Created by DEV-1 on 1/19/2018.
+ * Created by Iker Redondo on 1/19/2018.
  */
 
 public class Constants {
