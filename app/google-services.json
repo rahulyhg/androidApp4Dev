@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "543351622413",
+    "firebase_url": "https://noropefisher.firebaseio.com",
+    "project_id": "noropefisher",
+    "storage_bucket": "noropefisher.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543351622413:android:ac2bf6da0cb7abe0",
+        "android_client_info": {
+          "package_name": "com.desertstar.noropefisher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "543351622413-kmo8s6339rih8kpq7d5nnn53bk9b9o9b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.desertstar.noropefisher",
+            "certificate_hash": "f31e09b4011690dfe90209bbd8b9d14ec45b78dd"
+          }
+        },
+        {
+          "client_id": "543351622413-7dmormrut00u6sp9s7iukpufndn94o85.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCauhI_LAje7ncnO771tH5B_Y4zr7UeyCA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543351622413-7dmormrut00u6sp9s7iukpufndn94o85.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

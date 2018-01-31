@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.desertstar.noropefisher.DeployActivity">
+
+    <EditText
+        android:id="@+id/editTextID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
+        android:ems="10"
+        android:hint="Fisher Name"
+        android:inputType="textPersonName"
+        android:maxLength="7"
+        android:textAlignment="center"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/editTextSerialNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editTextID"
+        android:layout_alignStart="@+id/editTextID"
+        android:layout_below="@+id/editTextID"
+        android:layout_marginTop="28dp"
+
+        android:ems="10"
+        android:hint="Gear Number"
+        android:inputType="number"
+        android:maxLength="4"
+        android:textAlignment="center"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="53dp"
+        android:onClick="deploy"
+        android:text="Deploy"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/editTextExpiration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editTextSerialNumber"
+        android:layout_alignStart="@+id/editTextSerialNumber"
+        android:layout_below="@+id/editTextSerialNumber"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="Gear Expiration Days"
+        android:inputType="number"
+        android:maxLength="3"
+        android:textAlignment="center"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/editTextVisibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editTextExpiration"
+        android:layout_alignStart="@+id/editTextExpiration"
+        android:layout_below="@+id/editTextExpiration"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:hint="Visibility Range"
+        android:inputType="number|numberDecimal"
+        android:maxLength="3"
+        android:textAlignment="center"
+        android:textSize="30sp" />
+</RelativeLayout>
