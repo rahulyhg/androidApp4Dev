@@ -5,6 +5,7 @@ package com.desertstar.noropefisher;
  */
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import static com.desertstar.noropefisher.Constants.SECOND_COLUMN;
 import static com.desertstar.noropefisher.Constants.THIRD_COLUMN;
 
 public class ListViewAdapter extends BaseAdapter{
+       //public static final int ITEM_VIEW_TYPE_IGNORE = -1;
+
 
     public ArrayList<HashMap<String, String>> list;
     Activity activity;
@@ -37,14 +40,34 @@ public class ListViewAdapter extends BaseAdapter{
     }
 
     @Override
+    public int getViewTypeCount(){
+
+        //Log.d("getViewTypeCount", String.valueOf((getCount()>0) ? getCount() : 1));
+        return (getCount()>0) ? getCount() : 1;
+
+    }
+
+    @Override
+    public int getItemViewType(int position){
+        //Log.d("getItemViewType", String.valueOf(position+1));
+
+        return position;
+    }
+
+
+    @Override
     public int getCount() {
         // TODO Auto-generated method stub
+        //Log.d("getCount", String.valueOf(list.size()));
+
         return list.size();
     }
 
     @Override
     public Object getItem(int position) {
         // TODO Auto-generated method stub
+        //Log.d("getItem", String.valueOf(position));
+
         return list.get(position);
     }
 

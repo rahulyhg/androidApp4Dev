@@ -8,7 +8,10 @@
         android:layout_width="72dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:maxLength="6"
+
         android:textAlignment="textStart"
+        android:layout_gravity="start"
         android:textSize="30sp"
         android:textStyle="bold" />
 
@@ -16,6 +19,7 @@
         android:id="@+id/serial"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxLength="4"
         android:layout_weight="1"
         android:textAlignment="center"
         android:textSize="30sp" />
