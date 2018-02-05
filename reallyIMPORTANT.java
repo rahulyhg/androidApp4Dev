@@ -24,7 +24,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -61,13 +60,13 @@ import static java.lang.Thread.sleep;
 public class MainActivity extends AppCompatActivity {
 
     //Attributes
-//    public static final String EXTRA_MESSAGE = "com.desertstar.noropefisher.MESSAGE";  //DELETE
+    public static final String EXTRA_MESSAGE = "com.desertstar.noropefisher.MESSAGE";  //DELETE
     static final int REQUEST_LOCATION = 1;
     static  final int MAX_DISTANCE_RANGE =700003 ;
     LocationManager locationManager;
 
-//    //Firebase storage reference (not real time database)
-//    private StorageReference mStorageRef;
+    //Firebase storage reference (not real time database)
+    private StorageReference mStorageRef;
 
     //Firebase db Reference
     private DatabaseReference dref;
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     //Array List
     //private ArrayAdapter<String> adapter;
 
-//    ArrayList<String> list=new ArrayList<>(); //DELETE
+    ArrayList<String> list=new ArrayList<>(); //DELETE
 
     private ArrayList<HashMap<String, String>> list2;
     ListViewAdapter adapterGlobal;
@@ -91,12 +90,14 @@ public class MainActivity extends AppCompatActivity {
     String da = "";
     String  ex = "1";
     String vi ="2";
-//    ArrayList<Deployment> depList;
+    ArrayList<Deployment> depList;
     Deployment clickedDeploymentData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String elUUID = Installation.id(this);
 
 
+        //Log.d("EEEEL UUUUUUUUIIIDDDDDD", elUUID);
 
         //TextView textView = findViewById(R.id.textViewMIO);
 
@@ -112,9 +113,6 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }).show();
 
-        String elUUID = Installation.id(this);
-        //Log.d("EEEEL UUUUUUUUIIIDDDDDD", elUUID);
-
 
 
         //textView.setText(elUUID);
@@ -124,14 +122,14 @@ public class MainActivity extends AppCompatActivity {
 
         //List View with the table
         listView = (ListView)findViewById(R.id.database_list_view);
-//        final ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,list); //DELETE
+        final ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,list); //DELETE
 
         //List with the different HashMap (1st-ID, 2nd-Serial# and 3rd-Distance)
         list2=new ArrayList<HashMap<String,String>>();
 
         //Custom Adapter with list2 as parameter
         final ListViewAdapter adapter2=new ListViewAdapter(this, list2);
-
+        ListViewAdapter adapter3;
         //TextView for AlertDialog's Title
         final TextView title = new TextView(this);
         final TextView title2 = new TextView(this);
@@ -176,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 ///*DELETE
                 Class sd = theDeployment.getClass();
                 String typename = sd.getName();
-                //Log.d("Typename", typename);
+                Log.d("Typename", typename);
                 //*/
 
                 //VAMOS CON OTRO!! O PARAAA!!
@@ -219,10 +217,10 @@ public class MainActivity extends AppCompatActivity {
                 DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
 
                 String avcbbvg = mDatabase.child("deployments").child(fisherName).getKey();
-                //Log.d("yokeseeeeee", avcbbvg);
+                Log.d("yokeseeeeee", avcbbvg);
 
 
-                //Log.d("SACADO DE LA LISTAAAAAA", String.valueOf(position));
+                Log.d("SACADO DE LA LISTAAAAAA", String.valueOf(position));
 //                g = depList.get(position).getGearNumber();
 //                la = String.valueOf(depList.get(position).getLatitude()) ;
 //                lo = String.valueOf(depList.get(position).getLongitude());
@@ -257,8 +255,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                                 DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                                //Log.d("el fisher: ", fisherName);
-                                //Log.d("uuid del telefono: ", phoneUUID);
+                                Log.d("el fisher: ", fisherName);
+                                Log.d("uuid del telefono: ", phoneUUID);
 
                                 String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
 
@@ -370,8 +368,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                        //Log.d("el fisher: ", fisherName);
-                        //Log.d("uuid del telefono: ", phoneUUID);
+                        Log.d("el fisher: ", fisherName);
+                        Log.d("uuid del telefono: ", phoneUUID);
 
                         String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
 
@@ -436,8 +434,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                        //Log.d("FISHERNAME: ", fisherName);
-                        //Log.d("id telefono: ", phoneUUID);
+                        Log.d("FISHERNAME: ", fisherName);
+                        Log.d("id telefono: ", phoneUUID);
                         //Log.d("es su TRAP?", a);
 
 
@@ -459,9 +457,6 @@ public class MainActivity extends AppCompatActivity {
                         //nothing
                     }
                 }).show();
-
-
-
                 TextView textView = (TextView) dialog5.findViewById(android.R.id.message);
                 textView.setTextSize(30);
 
@@ -477,22 +472,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView absListView, int i) {
-//
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-//                if (adapterGlobal != null && (i + i1 >1+ i2) )
-//                    adapterGlobal.notifyDataSetChanged();
-//            }
-//        });
-
-
         //SystemClock.sleep(1000);   SLEEPO
 
         //Getting reference to Firebase Database with all the deployments.
@@ -549,11 +528,11 @@ public class MainActivity extends AppCompatActivity {
 
 
                     String res2 =df2.format(dist*0.53996);
-                    temp.put(THIRD_COLUMN, res2 );
+                    temp.put(THIRD_COLUMN, res2 +" nmi");
 //                  if(list2.size() <=11)
 //
                     list2.add(temp);
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", list2.toString());
+                    Log.d("AAAAAAABBBBBBBBBBBBBBB", list2.toString());
 
 
                     HashMap<String,String>[] harr =list2.toArray(new HashMap[list2.size()]);
@@ -561,11 +540,11 @@ public class MainActivity extends AppCompatActivity {
                     ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<HashMap<String, String>>();
 
                     for(int i =0;i<list2.size();i++){
-                        //Log.d("KKKKKKKKKK", harr[i].get("First"));
+                        Log.d("KKKKKKKKKK", harr[i].get("First"));
                         orderedlist2.add(harr[i]);
 
                     }
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
+                    Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
 
                     list2 = orderedlist2;//new ArrayList(Arrays.asList(harr));
 
@@ -610,7 +589,7 @@ public class MainActivity extends AppCompatActivity {
                     isExpiredSt = "TRAP OK";
                     isExpired=false;
                 }
-                //Log.d("LA DIFFFFFF", isExpiredSt);
+                Log.d("LA DIFFFFFF", isExpiredSt);
 
                 DecimalFormat df2 = new DecimalFormat(".##");
                 DistanceCalculator calculator = new DistanceCalculator();
@@ -637,9 +616,9 @@ public class MainActivity extends AppCompatActivity {
 
 
                     String res2 =df2.format(dist*0.53996);
-                    temp.put(THIRD_COLUMN, res2 );
+                    temp.put(THIRD_COLUMN, res2 +" nmi");
                     for(HashMap<String, String> a : list2){
-                        //Log.d("compa fisher: "+d.getID(), "con: "+a.get("First"));
+                        Log.d("compa fisher: "+d.getID(), "con: "+a.get("First"));
 
                         if(a.get("First").equals(d.getID())){
                             list2.remove(a);
@@ -648,7 +627,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     if(list2.size() <=11)
                         list2.add(temp);
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", list2.toString());
+                    Log.d("AAAAAAABBBBBBBBBBBBBBB", list2.toString());
 
 
                     HashMap<String,String>[] harr =list2.toArray(new HashMap[list2.size()]);
@@ -656,16 +635,16 @@ public class MainActivity extends AppCompatActivity {
                     ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<HashMap<String, String>>();
 
                     for(int i =0;i<list2.size();i++){
-                        //Log.d("KKKKKKKKKK", harr[i].get("First"));
+                        Log.d("KKKKKKKKKK", harr[i].get("First"));
                         orderedlist2.add(harr[i]);
 
                     }
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
+                    Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
 
                     list2 = orderedlist2;//new ArrayList(Arrays.asList(harr));
 
                     for (HashMap<String, String> o : list2) {
-                        //Log.d("PPPPPPPPPPPPP", o.toString());
+                        Log.d("PPPPPPPPPPPPP", o.toString());
 
                     }
 //                    String res =df2.format(dist/1000);
@@ -736,7 +715,7 @@ public class MainActivity extends AppCompatActivity {
                     isExpiredSt = "TRAP OK";
                     isExpired=false;
                 }
-                //Log.d("LA DIFFFFFF", isExpiredSt);
+                Log.d("LA DIFFFFFF", isExpiredSt);
 
                 DecimalFormat df2 = new DecimalFormat(".##");
                 DistanceCalculator calculator = new DistanceCalculator();
@@ -763,9 +742,9 @@ public class MainActivity extends AppCompatActivity {
 
 
                     String res2 =df2.format(dist*0.53996);
-                    temp.put(THIRD_COLUMN, res2 );
+                    temp.put(THIRD_COLUMN, res2 +" nmi");
                     list2.remove(temp);
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", list2.toString());
+                    Log.d("AAAAAAABBBBBBBBBBBBBBB", list2.toString());
 
 
                     HashMap<String,String>[] harr =list2.toArray(new HashMap[list2.size()]);
@@ -773,16 +752,16 @@ public class MainActivity extends AppCompatActivity {
                     ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<HashMap<String, String>>();
 
                     for(int i =0;i<list2.size();i++){
-                        //Log.d("KKKKKKKKKK", harr[i].get("First"));
+                        Log.d("KKKKKKKKKK", harr[i].get("First"));
                         orderedlist2.add(harr[i]);
 
                     }
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
+                    Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
 
                     list2 = orderedlist2;//new ArrayList(Arrays.asList(harr));
 
                     for (HashMap<String, String> o : list2) {
-                        //Log.d("PPPPPPPPPPPPP", o.toString());
+                        Log.d("PPPPPPPPPPPPP", o.toString());
 
                     }
 //                    String res =df2.format(dist/1000);
@@ -843,8 +822,8 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1, HashMap<String,String> o2) {
                 String t1 = o1.get("Third");
                 String t2 = o2.get("Third");
-                String s1 =t1.substring(0, t1.length());// - 3);
-                String s2 =t2.substring(0, t2.length());// - 3);
+                String s1 =t1.substring(0, t1.length() - 3);
+                String s2 =t2.substring(0, t2.length() - 3);
                 double n1 = Double.parseDouble(s1);
                 double n2 = Double.parseDouble(s2);
                 return (n1 > n2) ? 1 : -1;
@@ -858,28 +837,26 @@ public class MainActivity extends AppCompatActivity {
 
         return cal.getTime();
     }
+    public void testingFirebaseStorage(){
+        Uri file = Uri.fromFile(new File("rivers1.jpg"));
+        StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
 
-
-//    public void testingFirebaseStorage(){
-//        Uri file = Uri.fromFile(new File("rivers1.jpg"));
-//        StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
-//
-//        riversRef.putFile(file)
-//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        // Get a URL to the uploaded content
-//                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//                        // Handle unsuccessful uploads
-//                        // ...
-//                    }
-//                });
-//    }
+        riversRef.putFile(file)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        // ...
+                    }
+                });
+    }
 
 //    //trying to dynamically refresh ListView. Not got it yet.
 //    public void refreshListView(View view){

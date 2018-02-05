@@ -1,0 +1,324 @@
+{
+  "deployments" : {
+    "1" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 45,
+        "month" : 1,
+        "seconds" : 11,
+        "time" : 1517852711797,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 898,
+      "gearNumber" : "8686",
+      "id" : "1",
+      "latitude" : 36.671525, 
+      "longitude" : -121.766771,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 897
+    },
+    "2" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 44,
+        "month" : 1,
+        "seconds" : 49,
+        "time" : 1517852689624,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 688,
+      "gearNumber" : "986",
+      "id" : "2",
+      "latitude" : 36.660881, 
+      "longitude" : -121.783714,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 898
+    },
+    "3" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 45,
+        "month" : 1,
+        "seconds" : 0,
+        "time" : 1517852700425,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 568,
+      "gearNumber" : "5595",
+      "id" : "3",
+      "latitude" : 36.637190, 
+      "longitude" : -121.801094,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 889
+    },
+    "4" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 45,
+        "month" : 1,
+        "seconds" : 19,
+        "time" : 1517852719550,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 868,
+      "gearNumber" : "8656",
+      "id" : "4",
+      "latitude" : 36.617367, 
+      "longitude" : -121.819467,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 898
+    },
+    "5" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 45,
+        "month" : 1,
+        "seconds" : 27,
+        "time" : 1517852727670,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 868,
+      "gearNumber" : "7653",
+      "id" : "5",
+      "latitude" : 36.596719, 
+      "longitude" : -121.833961,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 868
+    },
+    "6" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 45,
+        "month" : 1,
+        "seconds" : 36,
+        "time" : 1517852736599,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 898,
+      "gearNumber" : "7686",
+      "id" : "6",
+      "latitude" : 36.577704, 
+      "longitude" : -121.851313,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 898
+    },
+    "7" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 45,
+        "month" : 1,
+        "seconds" : 44,
+        "time" : 1517852744522,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 868,
+      "gearNumber" : "8686",
+      "id" : "7",
+      "latitude" : 36.550158, 
+      "longitude" : -121.883771,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 898
+    },
+    "8" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 45,
+        "month" : 1,
+        "seconds" : 51,
+        "time" : 1517852751429,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 868,
+      "gearNumber" : "8686",
+      "id" : "8",
+      "latitude" : 36.519157, 
+      "longitude" : -121.900307,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 898
+    },
+    "9" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 45,
+        "month" : 1,
+        "seconds" : 59,
+        "time" : 1517852759038,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 868,
+      "gearNumber" : "8683",
+      "id" : "9",
+      "latitude" : 36.485601, 
+      "longitude" : -121.905243,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 898
+    },
+    "10" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 52,
+        "month" : 1,
+        "seconds" : 51,
+        "time" : 1517853171567,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 868,
+      "gearNumber" : "4189",
+      "id" : "10",
+      "latitude" : 36.383124, 
+      "longitude" : -121.893913,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 868
+    },
+    "11" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 52,
+        "month" : 1,
+        "seconds" : 59,
+        "time" : 1517853179677,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 868,
+      "gearNumber" : "5976",
+      "id" : "11",
+      "latitude" : 36.303481, 
+      "longitude" : -121.881897,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 898
+    },
+    "12" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 9,
+        "minutes" : 53,
+        "month" : 1,
+        "seconds" : 7,
+        "time" : 1517853187023,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 886,
+      "gearNumber" : "8686",
+      "id" : "12",
+      "latitude" : 36.321740, 
+      "longitude" : -121.875374,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 868
+    },
+    "13" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 10,
+        "minutes" : 14,
+        "month" : 1,
+        "seconds" : 5,
+        "time" : 1517854445409,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 552,
+      "gearNumber" : "55",
+      "id" : "13",
+      "latitude" : 36.268269, 
+      "longitude" : -121.809880,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 55
+    },
+    "14" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 10,
+        "minutes" : 18,
+        "month" : 1,
+        "seconds" : 50,
+        "time" : 1517854730243,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 899,
+      "gearNumber" : "8998",
+      "id" : "14",
+      "latitude" : 36.210392, 
+      "longitude" : -121.742944,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 989
+    },
+    "15" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 10,
+        "minutes" : 19,
+        "month" : 1,
+        "seconds" : 4,
+        "time" : 1517854744640,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 595,
+      "gearNumber" : "5959",
+      "id" : "15",
+      "latitude" : 36.196848, 
+      "longitude" : -121.718207,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 898
+    },
+    "bsbs" : {
+      "deploymentDate" : {
+        "date" : 5,
+        "day" : 1,
+        "hours" : 10,
+        "minutes" : 17,
+        "month" : 1,
+        "seconds" : 55,
+        "time" : 1517854675601,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 949,
+      "gearNumber" : "9797",
+      "id" : "bsbs",
+      "latitude" : 36.677681,
+      "longitude" : -121.7619853,
+      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
+      "visibilityRange" : 989
+    }
+  }
+}
