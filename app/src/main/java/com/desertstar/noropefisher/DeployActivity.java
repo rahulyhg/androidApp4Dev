@@ -28,6 +28,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 public class DeployActivity extends AppCompatActivity {
     static final int REQUEST_LOCATION = 1;
@@ -149,7 +150,12 @@ public class DeployActivity extends AppCompatActivity {
                     }
 
                     Deployment user = new Deployment(theFisherName,elUUID ,theGearNumber,latti,longi, theExpiration,theVisibility,laDate );
-                    mDatabase.child("deployments").child(theFisherName).setValue(user);
+
+                    Random rnd = new Random();
+                    int whatever = rnd.nextInt();
+                    //String.valueOf(whatever)+"-"+
+
+                    mDatabase.child("deployments").child(theFisherName+"-"+theGearNumber).setValue(user);
 
 
                     SharedPreferences.Editor editor = settings.edit();

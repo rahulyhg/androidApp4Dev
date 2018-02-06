@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //VAMOS CON OTRO!! O PARAAA!!
 
-                dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName);
+                dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+gearN);
                 // Read from the database
                 dref.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
                 DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
 
-                String avcbbvg = mDatabase.child("deployments").child(fisherName).getKey();
+                String avcbbvg = mDatabase.child("deployments").child(fisherName+"-"+g).getKey();
                 //Log.d("yokeseeeeee", avcbbvg);
 
 
@@ -267,9 +267,9 @@ public class MainActivity extends AppCompatActivity {
                                 //Log.d("el fisher: ", fisherName);
                                 //Log.d("uuid del telefono: ", phoneUUID);
 
-                                String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
+                                //String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
 
-                                dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"/uuid");
+                                dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
 
                                 //DatabaseReference userNameRef = rootRef.child("deployments").child(fisherName).child(phoneUUID);
                                 ValueEventListener eventListener = new ValueEventListener() {
@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
                                             TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
                                             textView.setTextSize(25);
                                         }else{
-                                            FirebaseDatabase.getInstance().getReference("deployments/"+fisherName).removeValue();
+                                            FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
                                             AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     String a = la;
@@ -380,9 +380,10 @@ public class MainActivity extends AppCompatActivity {
                         //Log.d("el fisher: ", fisherName);
                         //Log.d("uuid del telefono: ", phoneUUID);
 
-                        String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
+                        //String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
 
-                        dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"/uuid");
+                        Log.d("G",g);
+                        dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
 
                         //DatabaseReference userNameRef = rootRef.child("deployments").child(fisherName).child(phoneUUID);
                         ValueEventListener eventListener = new ValueEventListener() {
@@ -400,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
                                     TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
                                     textView.setTextSize(25);
                                 }else{
-                                    FirebaseDatabase.getInstance().getReference("deployments/"+fisherName).removeValue();
+                                    FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
                                     AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             String a = la;
@@ -596,7 +597,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.d("Key", dataSnapshot.getKey());
                 Deployment d = dataSnapshot.getValue(Deployment.class);
+                Log.d("dep", d.toString());
                 locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                 double location [] = getLocation();
                 double lat2 = location[0];
@@ -648,7 +651,7 @@ public class MainActivity extends AppCompatActivity {
                     for(HashMap<String, String> a : list2){
                         //Log.d("compa fisher: "+d.getID(), "con: "+a.get("First"));
 
-                        if(a.get("First").equals(d.getID())){
+                        if(a.get("Second").equals(d.getID())){
                             list2.remove(a);
                             break;
                         }
@@ -665,7 +668,6 @@ public class MainActivity extends AppCompatActivity {
                     for(int i =0;i<list2.size();i++){
                         //Log.d("KKKKKKKKKK", harr[i].get("First"));
                         orderedlist2.add(harr[i]);
-
                     }
                     //Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
 
@@ -673,7 +675,6 @@ public class MainActivity extends AppCompatActivity {
 
                     for (HashMap<String, String> o : list2) {
                         //Log.d("PPPPPPPPPPPPP", o.toString());
-
                     }
 //                    String res =df2.format(dist/1000);
 //                    list.add(res);
