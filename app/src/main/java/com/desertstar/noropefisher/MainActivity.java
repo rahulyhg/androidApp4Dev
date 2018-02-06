@@ -6,6 +6,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -93,8 +94,14 @@ public class MainActivity extends AppCompatActivity {
     String vi ="2";
 //    ArrayList<Deployment> depList;
     Deployment clickedDeploymentData;
+
+    SharedPreferences settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        settings = getSharedPreferences("com.desertstar.noropefisher", Context.MODE_PRIVATE);
+
+
 
 
 

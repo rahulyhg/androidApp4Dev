@@ -6,6 +6,7 @@ package com.desertstar.noropefisher;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -32,11 +33,27 @@ public class DeployActivity extends AppCompatActivity {
     static final int REQUEST_LOCATION = 1;
     LocationManager locationManager;
     private DatabaseReference mDatabase;
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deploy);
+
+        settings = getSharedPreferences("com.desertstar.noropefisher", Context.MODE_PRIVATE);
+        String fisherName = settings.getString("fisherName","");
+        String expirationDays = settings.getString("expirationDays","");
+        String visibilityRange = settings.getString("visibilityRange","");
+
+
+        EditText editTextFisherName = (EditText) findViewById(R.id.editTextID);
+        editTextFisherName.setText(fisherName);
+//        EditText editTextGearNumber = (EditText) findViewById(R.id.editTextSerialNumber);
+//        editTextGearNumber.setText("sup");
+        EditText editTextExpirationDays = (EditText) findViewById(R.id.editTextExpiration);
+        editTextExpirationDays.setText(expirationDays);
+        EditText editTextVisibilityRange = (EditText) findViewById(R.id.editTextVisibility);
+        editTextVisibilityRange.setText(visibilityRange);
     }
 
     //Method for DEPLOY button. Before showing a popup confirmation, It calls getLocation method and this phone's geolocation and saves all the data in the DB.
@@ -133,6 +150,15 @@ public class DeployActivity extends AppCompatActivity {
 
                     Deployment user = new Deployment(theFisherName,elUUID ,theGearNumber,latti,longi, theExpiration,theVisibility,laDate );
                     mDatabase.child("deployments").child(theFisherName).setValue(user);
+
+
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("fisherName",theFisherName);
+                    editor.putString("expirationDays",editTextExpiration.getText().toString());
+                    editor.putString("visibilityRange",editTextVisibility.getText().toString());
+                    editor.commit();
+
+
                 } else {
                     AlertDialog dialog = new AlertDialog.Builder(this).setMessage("Enter all the fills").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
