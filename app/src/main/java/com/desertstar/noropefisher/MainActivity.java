@@ -62,13 +62,10 @@ import static java.lang.Thread.sleep;
 public class MainActivity extends AppCompatActivity {
 
     //Attributes
-//    public static final String EXTRA_MESSAGE = "com.desertstar.noropefisher.MESSAGE";  //DELETE
     static final int REQUEST_LOCATION = 1;
     static  final int MAX_DISTANCE_RANGE =700003 ;
     LocationManager locationManager;
 
-//    //Firebase storage reference (not real time database)
-//    private StorageReference mStorageRef;
 
     //Firebase db Reference
     private DatabaseReference dref;
@@ -77,10 +74,6 @@ public class MainActivity extends AppCompatActivity {
     //Android Layout for multicolumn item list
     private ListView listView;
 
-    //Array List
-    //private ArrayAdapter<String> adapter;
-
-//    ArrayList<String> list=new ArrayList<>(); //DELETE
 
     private ArrayList<HashMap<String, String>> list2;
     ListViewAdapter adapterGlobal;
@@ -92,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
     String da = "";
     String  ex = "1";
     String vi ="2";
-    //    ArrayList<Deployment> depList;
     Deployment clickedDeploymentData;
 
     SharedPreferences settings;
@@ -101,30 +93,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         settings = getSharedPreferences("com.desertstar.noropefisher", Context.MODE_PRIVATE);
 
-
-
-
-
-        //TextView textView = findViewById(R.id.textViewMIO);
-
-
-//        AlertDialog dialog = new AlertDialog.Builder(this).setMessage("uuid: " + elUUID).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int id) {
-//                //finish();
-//            }
-//        }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialogInterface) {
-//                //finish();
-//            }
-//        }).show();
-
         String elUUID = Installation.id(this);
-        //Log.d("EEEEL UUUUUUUUIIIDDDDDD", elUUID);
 
-
-
-        //textView.setText(elUUID);
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         setContentView(R.layout.activity_main);
@@ -132,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
         //List View with the table
         listView = (ListView)findViewById(R.id.database_list_view);
-//        final ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,list); //DELETE
 
         //List with the different HashMap (1st-ID, 2nd-Serial# and 3rd-Distance)
         list2=new ArrayList<HashMap<String,String>>();
@@ -155,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
                 {
-                    //int pos=position+1;
+
                     //Toast.makeText(MainActivity.this, Integer.toString(pos)+" Clicked", Toast.LENGTH_SHORT).show();
                     title.setText("Deployment Information:");
                     title.setGravity(Gravity.CENTER);
@@ -180,11 +149,6 @@ public class MainActivity extends AppCompatActivity {
                     fisherName = a.get("First");
                     gearN = a.get("Second");
 
-                    ///*DELETE
-                    Class sd = theDeployment.getClass();
-                    String typename = sd.getName();
-                    //Log.d("Typename", typename);
-                    //*/
 
                     //GETTING REFERENCE TO FISHERMAN SPECIFIC DEPLOYMENT
                     dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+gearN);
@@ -213,27 +177,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-                    //g = clickedDeploymentData.getGearNumber();
-                    //                double la = clickedDeploymentData.getLatitude() ;
-                    //                double lo = clickedDeploymentData.getLongitude();
-                    //                Date da = clickedDeploymentData.getDeploymentDate();
-                    //                int  ex = clickedDeploymentData.getExpirationTime();
-                    //                int vi = clickedDeploymentData.getVisibilityRange();
-
-
-                    DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
-
-                    String avcbbvg = mDatabase.child("deployments").child(fisherName+"-"+g).getKey();
-                    //Log.d("yokeseeeeee", avcbbvg);
-
-
-                    //Log.d("SACADO DE LA LISTAAAAAA", String.valueOf(position));
-                    //                g = depList.get(position).getGearNumber();
-                    //                la = String.valueOf(depList.get(position).getLatitude()) ;
-                    //                lo = String.valueOf(depList.get(position).getLongitude());
-                    //                da = depList.get(position).getDeploymentDate().toString();
-                    //                ex = String.valueOf(depList.get(position).getExpirationTime());
-                    //                vi = String.valueOf(depList.get(position).getVisibilityRange());
                     AlertDialog dialog5 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title2).setMessage(""+
                             "Gear  #" + gearN + "\n" +
                             "from fisher "+fisherName +"\n" +
@@ -262,20 +205,14 @@ public class MainActivity extends AppCompatActivity {
 
 
                                     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                                    //Log.d("el fisher: ", fisherName);
-                                    //Log.d("uuid del telefono: ", phoneUUID);
-
-                                    //String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
 
                                     dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
 
-                                    //DatabaseReference userNameRef = rootRef.child("deployments").child(fisherName).child(phoneUUID);
                                     ValueEventListener eventListener = new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             Object algo = dataSnapshot.getValue();
                                             String s = (String)algo;
-                                            //Log.d("s: ", s);
 
                                             if( !s.equals(phoneUUID) ) {
                                                 AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -307,13 +244,16 @@ public class MainActivity extends AppCompatActivity {
                                                         //finish();
                                                     }
                                                 }).show();
-                                                TextView textView = (TextView) dialog2.findViewById(android.R.id.message);
-                                                textView.setTextSize(25);
 
-                                                TextView textViewButton = (TextView) dialog2.findViewById(android.R.id.button1);
-                                                textViewButton.setTextSize(25);
-                                                TextView textViewButton2 = (TextView) dialog2.findViewById(android.R.id.button2);
-                                                textViewButton2.setTextSize(25);                                }
+                                                setDialog(dialog2,25,25,25,0);
+//                                                TextView textView = (TextView) dialog2.findViewById(android.R.id.message);
+//                                                textView.setTextSize(25);
+//
+//                                                TextView textViewButton = (TextView) dialog2.findViewById(android.R.id.button1);
+//                                                textViewButton.setTextSize(25);
+//                                                TextView textViewButton2 = (TextView) dialog2.findViewById(android.R.id.button2);
+//                                                textViewButton2.setTextSize(25);
+                                            }
                                         }
 
                                         @Override
@@ -347,15 +287,15 @@ public class MainActivity extends AppCompatActivity {
                                         ((ViewGroup)title.getParent()).removeView(title);
                                 }
                             }).show();
-
-                            TextView textView = (TextView) dialog78.findViewById(android.R.id.message);
-                            textView.setTextSize(25);
-                            TextView textViewButton = (TextView) dialog78.findViewById(android.R.id.button1);
-                            textViewButton.setTextSize(20);
-                            TextView textViewButton2 = (TextView) dialog78.findViewById(android.R.id.button2);
-                            textViewButton2.setTextSize(20);
-                            TextView textViewButton3 = (TextView) dialog78.findViewById(android.R.id.button3);
-                            textViewButton3.setTextSize(20);
+                            setDialog(dialog78,25,20,20,20);
+//                            TextView textView = (TextView) dialog78.findViewById(android.R.id.message);
+//                            textView.setTextSize(25);
+//                            TextView textViewButton = (TextView) dialog78.findViewById(android.R.id.button1);
+//                            textViewButton.setTextSize(20);
+//                            TextView textViewButton2 = (TextView) dialog78.findViewById(android.R.id.button2);
+//                            textViewButton2.setTextSize(20);
+//                            TextView textViewButton3 = (TextView) dialog78.findViewById(android.R.id.button3);
+//                            textViewButton3.setTextSize(20);
 
                         }
                     }).setNegativeButton("Release", new DialogInterface.OnClickListener() {
@@ -375,21 +315,15 @@ public class MainActivity extends AppCompatActivity {
 
 
                             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                            //Log.d("el fisher: ", fisherName);
-                            //Log.d("uuid del telefono: ", phoneUUID);
 
-                            //String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
-
-                            Log.d("G",g);
                             dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
 
-                            //DatabaseReference userNameRef = rootRef.child("deployments").child(fisherName).child(phoneUUID);
+
                             ValueEventListener eventListener = new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     Object algo = dataSnapshot.getValue();
                                     String s = (String)algo;
-                                    //Log.d("s: ", s);
 
                                     if( !s.equals(phoneUUID) ) {
                                         AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -420,23 +354,21 @@ public class MainActivity extends AppCompatActivity {
                                                 //finish();
                                             }
                                         }).show();
-                                        TextView textView = (TextView) dialog2.findViewById(android.R.id.message);
-                                        textView.setTextSize(25);
-
-                                        TextView textViewButton = (TextView) dialog2.findViewById(android.R.id.button1);
-                                        textViewButton.setTextSize(25);
-                                        TextView textViewButton2 = (TextView) dialog2.findViewById(android.R.id.button2);
-                                        textViewButton2.setTextSize(25);                                }
+                                        setDialog(dialog2,25,20,20,0);
+//                                        TextView textView = (TextView) dialog2.findViewById(android.R.id.message);
+//                                        textView.setTextSize(25);
+//
+//                                        TextView textViewButton = (TextView) dialog2.findViewById(android.R.id.button1);
+//                                        textViewButton.setTextSize(25);
+//                                        TextView textViewButton2 = (TextView) dialog2.findViewById(android.R.id.button2);
+//                                        textViewButton2.setTextSize(25);
+                                    }
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {}
                             };
                             dref.addListenerForSingleValueEvent(eventListener);
-                            //Log.d("FISHERNAME: ", fisherName);
-                            //Log.d("id telefono: ", phoneUUID);
-                            //Log.d("es su TRAP?", a);
-                            //finish();
 
                         }
                     }).setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -452,17 +384,18 @@ public class MainActivity extends AppCompatActivity {
                             //nothing
                         }
                     }).show();
-                    TextView textView = (TextView) dialog5.findViewById(android.R.id.message);
-                    textView.setTextSize(30);
-                    TextView textViewButton = (TextView) dialog5.findViewById(android.R.id.button1);
-                    textViewButton.setTextSize(18);
-                    TextView textViewButton2 = (TextView) dialog5.findViewById(android.R.id.button2);
-                    textViewButton2.setTextSize(18);
-                    TextView textViewButton3 = (TextView) dialog5.findViewById(android.R.id.button3);
-                    textViewButton3.setTextSize(18);
+                    setDialog(dialog5,30,18,18,18);
+//                    TextView textView = (TextView) dialog5.findViewById(android.R.id.message);
+//                    textView.setTextSize(30);
+//                    TextView textViewButton = (TextView) dialog5.findViewById(android.R.id.button1);
+//                    textViewButton.setTextSize(18);
+//                    TextView textViewButton2 = (TextView) dialog5.findViewById(android.R.id.button2);
+//                    textViewButton2.setTextSize(18);
+//                    TextView textViewButton3 = (TextView) dialog5.findViewById(android.R.id.button3);
+//                    textViewButton3.setTextSize(18);
 
-                    Object a2 = adapterGlobal.getItem(position);
-                    //Log.d("OBJETOOOOOOO", a2.toString());
+                    //Object a2 = adapterGlobal.getItem(position);
+
 
                 }         //END OF OnItemClick() METHOD
             });
@@ -486,7 +419,6 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
 
-
         //GETTING REFERENCE TO FIREBASE DATABASE WITH ALL THE DEPLOYMENTS.
         dref = FirebaseDatabase.getInstance().getReference("deployments");
         //ADDING listener to the DB reference, add child event listener <-IMPORTANT to notice what kind of event.
@@ -494,275 +426,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 poblateListView(dataSnapshot,prevChildKey, 1);
-                /*
-                Deployment d = dataSnapshot.getValue(Deployment.class);
-                locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-                double location [] = getLocation();
-                double lat2 = location[0];
-                double long2 =  location[1];
-                //Log.d("LAFFFFFFAA", d.getDeploymentDate().toString());
-                Date daysAddedDate = addDays(d.getDeploymentDate(),d.getExpirationTime());
-                //IF dayDif is 1 the trap has NOT expired yet. Meaning today's date (the argument) is less than the daysAddedDate.
-                int dayDif = daysAddedDate.compareTo(new Date());
-                String isExpiredSt;
-                boolean isExpired;
-                if(dayDif <0){
-                    isExpiredSt = "TRAP EXPIRED~~~";
-                    isExpired=true;
-                }else if (dayDif ==0){
-                    isExpiredSt = "TRAP EXPIRES TODAY";
-                    isExpired=false;
-                }else{
-                    isExpiredSt = "TRAP OK";
-                    isExpired=false;
-                }
-                //Log.d("LA DIFFFFFF", isExpiredSt);
-
-                DecimalFormat df2 = new DecimalFormat(".##");
-                DistanceCalculator calculator = new DistanceCalculator();
-
-                double dist = calculator.distance(d.getLatitude(),lat2,d.getLongitude(),long2,0,0);
-
-                String fisherUUID = d.getUuid();
-
-                File installation;
-                String phoneUUID;
-                try {
-                    installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
-                    phoneUUID =  Installation.readInstallationFile(installation);
-                }catch (Exception e){
-                    throw new RuntimeException(e);
-                }
-
-
-                dist = dist/1000;
-                if(dist < MAX_DISTANCE_RANGE  && (  (fisherUUID.equals(phoneUUID) ) || ((dist *0.53996 <= d.getVisibilityRange())&&!isExpired) )){
-                    HashMap<String,String> temp=new HashMap<String, String>();
-                    temp.put(FIRST_COLUMN, d.getID());
-                    temp.put(SECOND_COLUMN, d.getGearNumber());
-
-
-                    String res2 =df2.format(dist*0.53996);
-                    temp.put(THIRD_COLUMN, res2 );
-//                  if(list2.size() <=11)
-//
-                    list2.add(temp);
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", list2.toString());
-
-
-                    HashMap<String,String>[] harr =list2.toArray(new HashMap[list2.size()]);
-                    sortList(harr);
-                    ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<HashMap<String, String>>();
-
-                    for(int i =0;i<list2.size();i++){
-                        //Log.d("KKKKKKKKKK", harr[i].get("First"));
-                        orderedlist2.add(harr[i]);
-
-                    }
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
-
-                    list2 = orderedlist2;//new ArrayList(Arrays.asList(harr));
-
-//                    ArrayList<HashMap<String, String>> displayedList = new ArrayList<HashMap<String, String>>();
-//                    for (int i=0; i<12; i++) {
-//                        //Log.d("PPPPPPPPPPPPP", o.toString());
-//                        displayedList.add(list2.get(i));
-//                    }
-////                    String res =df2.format(dist/1000);
-////                    list.add(res);
-//                    list2 = displayedList;
-                    final ListViewAdapter adapter3 = new ListViewAdapter(MainActivity.this, list2);
-//                    listView.setAdapter(adapter2);
-//                    adapter2.notifyDataSetChanged();
-                    listView.setAdapter(adapter3);
-                    adapterGlobal = (ListViewAdapter) listView.getAdapter();
-                    adapter3.notifyDataSetChanged();
-                }*/
-
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 poblateListView(dataSnapshot,s,2);
-                /*
-                Log.d("Key", dataSnapshot.getKey());
-                Deployment d = dataSnapshot.getValue(Deployment.class);
-                Log.d("dep", d.toString());
-                locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-                double location [] = getLocation();
-                double lat2 = location[0];
-                double long2 =  location[1];
-                //Log.d("LAFFFFFFAA", d.getDeploymentDate().toString());
-                Date daysAddedDate = addDays(d.getDeploymentDate(),d.getExpirationTime());
-                //IF dayDif is 1 the trap has NOT expired yet. Meaning today's date (the argument) is less than the daysAddedDate.
-                int dayDif = daysAddedDate.compareTo(new Date());
-                String isExpiredSt;
-                boolean isExpired;
-                if(dayDif <0){
-                    isExpiredSt = "TRAP EXPIRED~~~";
-                    isExpired=true;
-                }else if (dayDif ==0){
-                    isExpiredSt = "TRAP EXPIRES now";
-                    isExpired=true;
-                }else{
-                    isExpiredSt = "TRAP OK";
-                    isExpired=false;
-                }
-                //Log.d("LA DIFFFFFF", isExpiredSt);
-
-                DecimalFormat df2 = new DecimalFormat(".##");
-                DistanceCalculator calculator = new DistanceCalculator();
-
-                double dist = calculator.distance(d.getLatitude(),lat2,d.getLongitude(),long2,0,0);
-
-                String fisherUUID = d.getUuid();
-
-                File installation;
-                String phoneUUID;
-                try {
-                    installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
-                    phoneUUID =  Installation.readInstallationFile(installation);
-                }catch (Exception e){
-                    throw new RuntimeException(e);
-                }
-
-
-                dist = dist/1000;
-                if(dist < MAX_DISTANCE_RANGE  && (  (fisherUUID.equals(phoneUUID) ) || ((dist *0.53996 <= d.getVisibilityRange())&&!isExpired) )){
-                    HashMap<String,String> temp=new HashMap<String, String>();
-                    temp.put(FIRST_COLUMN, d.getID());
-                    temp.put(SECOND_COLUMN, d.getGearNumber());
-
-
-                    String res2 =df2.format(dist*0.53996);
-                    temp.put(THIRD_COLUMN, res2 );
-                    for(HashMap<String, String> a : list2){
-                        Log.d("compa fisher: "+d.getID(), "con: "+a.get("First"));
-
-                        if(a.get("Second").equals(d.getGearNumber())){
-                            Log.d("remove","removed");
-                            list2.remove(a);
-                            break;
-                        }
-                    }
-                    //if(list2.size() <=11)
-                    list2.add(temp);
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", list2.toString());
-
-
-                    HashMap<String,String>[] harr =list2.toArray(new HashMap[list2.size()]);
-                    sortList(harr);
-                    ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<HashMap<String, String>>();
-
-                    for(int i =0;i<list2.size();i++){
-                        //Log.d("KKKKKKKKKK", harr[i].get("First"));
-                        orderedlist2.add(harr[i]);
-                    }
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
-
-                    list2 = orderedlist2;//new ArrayList(Arrays.asList(harr));
-
-                    for (HashMap<String, String> o : list2) {
-                        //Log.d("PPPPPPPPPPPPP", o.toString());
-                    }
-//                    String res =df2.format(dist/1000);
-//                    list.add(res);
-
-                    final ListViewAdapter adapter3 = new ListViewAdapter(MainActivity.this, list2);
-//                    listView.setAdapter(adapter2);
-//                    adapter2.notifyDataSetChanged();
-                    listView.setAdapter(adapter3);
-                    adapterGlobal = (ListViewAdapter) listView.getAdapter();
-                    adapter3.notifyDataSetChanged();
-                }*/
-
-
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 poblateListView(dataSnapshot,"",3);
-                /*
-                Deployment d = dataSnapshot.getValue(Deployment.class);
-                locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-                double location [] = getLocation();
-                double lat2 = location[0];
-                double long2 =  location[1];
-                //Log.d("LAFFFFFFAA", d.getDeploymentDate().toString());
-                Date daysAddedDate = addDays(d.getDeploymentDate(),d.getExpirationTime());
-                //IF dayDif is 1 the trap has NOT expired yet. Meaning today's date (the argument) is less than the daysAddedDate.
-                int dayDif = daysAddedDate.compareTo(new Date());
-                String isExpiredSt;
-                boolean isExpired;
-                if(dayDif <=0){
-                    isExpiredSt = "TRAP EXPIRED~~~";
-                    isExpired=true;
-                }else if (dayDif ==0){
-                    isExpiredSt = "TRAP EXPIRES TODAY";
-                    isExpired=false;
-                }else{
-                    isExpiredSt = "TRAP OK";
-                    isExpired=false;
-                }
-                //Log.d("LA DIFFFFFF", isExpiredSt);
-
-                DecimalFormat df2 = new DecimalFormat(".##");
-                DistanceCalculator calculator = new DistanceCalculator();
-
-                double dist = calculator.distance(d.getLatitude(),lat2,d.getLongitude(),long2,0,0);
-
-                String fisherUUID = d.getUuid();
-
-                File installation;
-                String phoneUUID;
-                try {
-                    installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
-                    phoneUUID =  Installation.readInstallationFile(installation);
-                }catch (Exception e){
-                    throw new RuntimeException(e);
-                }
-
-
-                dist = dist/1000;
-                if(dist < MAX_DISTANCE_RANGE  && (  (fisherUUID.equals(phoneUUID) ) || ((dist *0.53996 <= d.getVisibilityRange())&&!isExpired) )){
-                    HashMap<String,String> temp=new HashMap<String, String>();
-                    temp.put(FIRST_COLUMN, d.getID());
-                    temp.put(SECOND_COLUMN, d.getGearNumber());
-
-
-                    String res2 =df2.format(dist*0.53996);
-                    temp.put(THIRD_COLUMN, res2 );
-                    list2.remove(temp);
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", list2.toString());
-
-
-                    HashMap<String,String>[] harr =list2.toArray(new HashMap[list2.size()]);
-                    sortList(harr);
-                    ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<HashMap<String, String>>();
-
-                    for(int i =0;i<list2.size();i++){
-                        //Log.d("KKKKKKKKKK", harr[i].get("First"));
-                        orderedlist2.add(harr[i]);
-
-                    }
-                    //Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
-
-                    list2 = orderedlist2;//new ArrayList(Arrays.asList(harr));
-
-                    for (HashMap<String, String> o : list2) {
-                        //Log.d("PPPPPPPPPPPPP", o.toString());
-
-                    }
-//                    String res =df2.format(dist/1000);
-//                    list.add(res);
-
-                    final ListViewAdapter adapter3 = new ListViewAdapter(MainActivity.this, list2);
-//                    listView.setAdapter(adapter2);
-//                    adapter2.notifyDataSetChanged();
-                    listView.setAdapter(adapter3);
-                    adapterGlobal = (ListViewAdapter) listView.getAdapter();
-                    adapter3.notifyDataSetChanged();
-                }*/
             }
 
             @Override
@@ -776,34 +449,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrayList);
-        //listView = (ListView) findViewById(R.id.database_list_view);
-        //listView.setAdapter(adapter);
-        // String value = dataSnapshot.getValue(String.class);
-
-/*
-        // Read from the database
-        mDataBase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                Log.d("tsg", "Value is: " + value);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("tag", "Failed to read value.", error.toException());
-            }
-        });
-        */
-
-//        SystemClock.sleep(2000);
-//        Intent intent = getIntent();
-//        finish();
-//        startActivity(intent);
     }
 
     public void sortList(HashMap<String,String>[] listToSort){
@@ -827,35 +472,6 @@ public class MainActivity extends AppCompatActivity {
         return cal.getTime();
     }
 
-
-//    public void testingFirebaseStorage(){
-//        Uri file = Uri.fromFile(new File("rivers1.jpg"));
-//        StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
-//
-//        riversRef.putFile(file)
-//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        // Get a URL to the uploaded content
-//                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//                        // Handle unsuccessful uploads
-//                        // ...
-//                    }
-//                });
-//    }
-
-//    //trying to dynamically refresh ListView. Not got it yet.
-//    public void refreshListView(View view){
-//        //https://stackoverflow.com/questions/5320358/update-listview-dynamically-with-adapter
-//        adapterGlobal=new ListViewAdapter(this, list2);
-//        listView.setAdapter(adapterGlobal);  //CHEEEEEEEEEEECKKK
-//        adapterGlobal.notifyDataSetChanged();
-//    }
 
     public void startDirections(View view){
         Intent intent = new Intent( Intent.ACTION_VIEW,
@@ -918,26 +534,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    public static double distance(double lat1, double lat2, double lon1,
-//                                  double lon2, double el1, double el2) {
-//
-//        final int R = 6371; // Radius of the earth
-//
-//        double latDistance = Math.toRadians(lat2 - lat1);
-//        double lonDistance = Math.toRadians(lon2 - lon1);
-//        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-//                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-//                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-//        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//        double distance = R * c * 1000; // convert to meters
-//
-//        double height = el1 - el2;
-//
-//        distance = Math.pow(distance, 2) + Math.pow(height, 2);
-//
-//        return Math.sqrt(distance);
-//    }
-
     //Code to execute asynchronous tasks in the background.
     private class AsyncTaskEx extends AsyncTask<Void, Void, Void> {
         /** The system calls this to perform work in a worker thread and
@@ -963,28 +559,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
-
-
-
-
-/*
-https://stackoverflow.com/questions/10733682/make-a-specific-code-run-in-background
-http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#facebook-looks-for-talent-and-cultural-fit-3
-    // Write this class inside your Activity and call where you want execute your method
-    new AsyncTaskEx().execute();
- */
-
-
     public void poblateListView(DataSnapshot dataSnapshot, String s, int addedChangedRemoved){
         Deployment d = dataSnapshot.getValue(Deployment.class);
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         double location [] = getLocation();
         double lat2 = location[0];
         double long2 =  location[1];
-        //Log.d("LAFFFFFFAA", d.getDeploymentDate().toString());
+
         Date daysAddedDate = addDays(d.getDeploymentDate(),d.getExpirationTime());
+
         //IF dayDif is 1 the trap has NOT expired yet. Meaning today's date (the argument) is less than the daysAddedDate.
         int dayDif = daysAddedDate.compareTo(new Date());
         String isExpiredSt;
@@ -999,7 +582,7 @@ http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#
             isExpiredSt = "TRAP OK";
             isExpired=false;
         }
-        //Log.d("LA DIFFFFFF", isExpiredSt);
+
 
         DecimalFormat df2 = new DecimalFormat(".##");
         DistanceCalculator calculator = new DistanceCalculator();
@@ -1060,6 +643,41 @@ http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#
             adapter3.notifyDataSetChanged();
         }
     }
+//NOTES:
+    //    //trying to dynamically refresh ListView. Not got it yet.
+//    public void refreshListView(View view){
+//        //https://stackoverflow.com/questions/5320358/update-listview-dynamically-with-adapter
+//        adapterGlobal=new ListViewAdapter(this, list2);
+//        listView.setAdapter(adapterGlobal);  //CHEEEEEEEEEEECKKK
+//        adapterGlobal.notifyDataSetChanged();
+//    }
+
+
+/*
+https://stackoverflow.com/questions/10733682/make-a-specific-code-run-in-background
+http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#facebook-looks-for-talent-and-cultural-fit-3
+    // Write this class inside your Activity and call where you want execute your method
+    new AsyncTaskEx().execute();
+ */
+
+public void setDialog(AlertDialog dialog78, int messageSize, int button1Size,int button2Size,int button3Size ){
+    TextView textView = (TextView) dialog78.findViewById(android.R.id.message);
+    textView.setTextSize(messageSize);
+
+    TextView textViewButton = (TextView) dialog78.findViewById(android.R.id.button1);
+    if(textViewButton != null){
+        textViewButton.setTextSize(button1Size);
+    }
+    TextView textViewButton2 = (TextView) dialog78.findViewById(android.R.id.button2);
+    if(textViewButton2 != null){
+        textViewButton2.setTextSize(button2Size);
+    }
+
+    TextView textViewButton3 = (TextView) dialog78.findViewById(android.R.id.button3);
+    if(textViewButton3 != null){
+        textViewButton3.setTextSize(button3Size);
+    }
+}
 }
 
 
