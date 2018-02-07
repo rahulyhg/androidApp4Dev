@@ -212,13 +212,7 @@ public class MainActivity extends AppCompatActivity {
                                                 AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {
                                                         startDirections(la,lo);
-//                                                        String a = la;
-//                                                        String b = lo;
-//                                                        Intent intent = new Intent( Intent.ACTION_VIEW,
-//                                                                Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
-//                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-//                                                        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-//                                                        startActivity(intent);
+
                                                     }
                                                 }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                                                     @Override
@@ -251,13 +245,7 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     startDirections(la,lo);
-//                                    String a = la;
-//                                    String b = lo;
-//                                    Intent intent = new Intent( Intent.ACTION_VIEW,
-//                                            Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
-//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-//                                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-//                                    startActivity(intent);
+
                                 }
                             }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
@@ -299,13 +287,7 @@ public class MainActivity extends AppCompatActivity {
                                         AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 startDirections(la,lo);
-//                                                String a = la;
-//                                                String b = lo;
-//                                                Intent intent = new Intent( Intent.ACTION_VIEW,
-//                                                        Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
-//                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-//                                                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-//                                                startActivity(intent);
+
                                             }
                                         }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                                             @Override
