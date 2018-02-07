@@ -191,8 +191,6 @@ public class MainActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int id) {
                                     final String phoneUUID = getPhoneUuid();
 
-                                    //DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-
                                     dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
 
                                     ValueEventListener eventListener = new ValueEventListener() {
@@ -206,19 +204,21 @@ public class MainActivity extends AppCompatActivity {
                                                     public void onClick(DialogInterface dialog, int id) {
                                                     }
                                                 }).show();
-                                                TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
-                                                textView.setTextSize(25);
+                                                setDialog(dialog45,25,0,0,0);
+//                                                TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
+//                                                textView.setTextSize(25);
                                             }else{
                                                 FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
                                                 AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {
-                                                        String a = la;
-                                                        String b = lo;
-                                                        Intent intent = new Intent( Intent.ACTION_VIEW,
-                                                                Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
-                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                                                        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                                                        startActivity(intent);
+                                                        startDirections(la,lo);
+//                                                        String a = la;
+//                                                        String b = lo;
+//                                                        Intent intent = new Intent( Intent.ACTION_VIEW,
+//                                                                Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
+//                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+//                                                        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+//                                                        startActivity(intent);
                                                     }
                                                 }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                                                     @Override
@@ -250,13 +250,14 @@ public class MainActivity extends AppCompatActivity {
                             }).setNeutralButton("Map", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    String a = la;
-                                    String b = lo;
-                                    Intent intent = new Intent( Intent.ACTION_VIEW,
-                                            Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                                    startActivity(intent);
+                                    startDirections(la,lo);
+//                                    String a = la;
+//                                    String b = lo;
+//                                    Intent intent = new Intent( Intent.ACTION_VIEW,
+//                                            Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+//                                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+//                                    startActivity(intent);
                                 }
                             }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
@@ -271,11 +272,11 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }).setNegativeButton("Release", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
+//                            DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
 
                             final String phoneUUID = getPhoneUuid();
 
-                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+//                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
                             dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
 
@@ -297,13 +298,15 @@ public class MainActivity extends AppCompatActivity {
                                         FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
                                         AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
-                                                String a = la;
-                                                String b = lo;
-                                                Intent intent = new Intent( Intent.ACTION_VIEW,
-                                                        Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                                                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                                                startActivity(intent);                            }
+                                                startDirections(la,lo);
+//                                                String a = la;
+//                                                String b = lo;
+//                                                Intent intent = new Intent( Intent.ACTION_VIEW,
+//                                                        Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
+//                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+//                                                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+//                                                startActivity(intent);
+                                            }
                                         }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                                             @Override
                                             public void onDismiss(DialogInterface dialogInterface) {
