@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     String da = "";
     String  ex = "1";
     String vi ="2";
-//    ArrayList<Deployment> depList;
+    //    ArrayList<Deployment> depList;
     Deployment clickedDeploymentData;
 
     SharedPreferences settings;
@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter2);
 
         try {
-        //BEGINNING OF ONCLICK EVENT LISTENER
-        //Listener for the ListView (To Pop-Up the Alert Dialog with the clicked Deployment's info)
+            //BEGINNING OF ONCLICK EVENT LISTENER
+            //Listener for the ListView (To Pop-Up the Alert Dialog with the clicked Deployment's info)
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
                 @Override
@@ -214,11 +214,11 @@ public class MainActivity extends AppCompatActivity {
                     });
 
                     //g = clickedDeploymentData.getGearNumber();
-    //                double la = clickedDeploymentData.getLatitude() ;
-    //                double lo = clickedDeploymentData.getLongitude();
-    //                Date da = clickedDeploymentData.getDeploymentDate();
-    //                int  ex = clickedDeploymentData.getExpirationTime();
-    //                int vi = clickedDeploymentData.getVisibilityRange();
+                    //                double la = clickedDeploymentData.getLatitude() ;
+                    //                double lo = clickedDeploymentData.getLongitude();
+                    //                Date da = clickedDeploymentData.getDeploymentDate();
+                    //                int  ex = clickedDeploymentData.getExpirationTime();
+                    //                int vi = clickedDeploymentData.getVisibilityRange();
 
 
                     DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -228,12 +228,12 @@ public class MainActivity extends AppCompatActivity {
 
 
                     //Log.d("SACADO DE LA LISTAAAAAA", String.valueOf(position));
-    //                g = depList.get(position).getGearNumber();
-    //                la = String.valueOf(depList.get(position).getLatitude()) ;
-    //                lo = String.valueOf(depList.get(position).getLongitude());
-    //                da = depList.get(position).getDeploymentDate().toString();
-    //                ex = String.valueOf(depList.get(position).getExpirationTime());
-    //                vi = String.valueOf(depList.get(position).getVisibilityRange());
+                    //                g = depList.get(position).getGearNumber();
+                    //                la = String.valueOf(depList.get(position).getLatitude()) ;
+                    //                lo = String.valueOf(depList.get(position).getLongitude());
+                    //                da = depList.get(position).getDeploymentDate().toString();
+                    //                ex = String.valueOf(depList.get(position).getExpirationTime());
+                    //                vi = String.valueOf(depList.get(position).getVisibilityRange());
                     AlertDialog dialog5 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title2).setMessage(""+
                             "Gear  #" + gearN + "\n" +
                             "from fisher "+fisherName +"\n" +
@@ -569,7 +569,7 @@ public class MainActivity extends AppCompatActivity {
 ////                    String res =df2.format(dist/1000);
 ////                    list.add(res);
 //                    list2 = displayedList;
-                      final ListViewAdapter adapter3 = new ListViewAdapter(MainActivity.this, list2);
+                    final ListViewAdapter adapter3 = new ListViewAdapter(MainActivity.this, list2);
 //                    listView.setAdapter(adapter2);
 //                    adapter2.notifyDataSetChanged();
                     listView.setAdapter(adapter3);
@@ -800,10 +800,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-       // adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrayList);
+        // adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrayList);
         //listView = (ListView) findViewById(R.id.database_list_view);
         //listView.setAdapter(adapter);
-       // String value = dataSnapshot.getValue(String.class);
+        // String value = dataSnapshot.getValue(String.class);
 
 /*
         // Read from the database
@@ -999,4 +999,92 @@ http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#
     // Write this class inside your Activity and call where you want execute your method
     new AsyncTaskEx().execute();
  */
+
+
+    public void poblateListView(DataSnapshot dataSnapshot, String s, int addedChangedRemoved){
+        Deployment d = dataSnapshot.getValue(Deployment.class);
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        double location [] = getLocation();
+        double lat2 = location[0];
+        double long2 =  location[1];
+        //Log.d("LAFFFFFFAA", d.getDeploymentDate().toString());
+        Date daysAddedDate = addDays(d.getDeploymentDate(),d.getExpirationTime());
+        //IF dayDif is 1 the trap has NOT expired yet. Meaning today's date (the argument) is less than the daysAddedDate.
+        int dayDif = daysAddedDate.compareTo(new Date());
+        String isExpiredSt;
+        boolean isExpired;
+        if(dayDif <0){
+            isExpiredSt = "TRAP EXPIRED~~~";
+            isExpired=true;
+        }else if (dayDif ==0){
+            isExpiredSt = "TRAP EXPIRES now";
+            isExpired=true;
+        }else{
+            isExpiredSt = "TRAP OK";
+            isExpired=false;
+        }
+        //Log.d("LA DIFFFFFF", isExpiredSt);
+
+        DecimalFormat df2 = new DecimalFormat(".##");
+        DistanceCalculator calculator = new DistanceCalculator();
+
+        double dist = calculator.distance(d.getLatitude(),lat2,d.getLongitude(),long2,0,0);
+
+        String fisherUUID = d.getUuid();
+
+        File installation;
+        String phoneUUID;
+        try {
+            installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
+            phoneUUID =  Installation.readInstallationFile(installation);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
+
+        dist = dist/1000;
+        if(dist < MAX_DISTANCE_RANGE  && (  (fisherUUID.equals(phoneUUID) ) || ((dist *0.53996 <= d.getVisibilityRange())&&!isExpired) )){
+            HashMap<String,String> temp=new HashMap<String, String>();
+            temp.put(FIRST_COLUMN, d.getID());
+            temp.put(SECOND_COLUMN, d.getGearNumber());
+
+
+            String res2 =df2.format(dist*0.53996);
+            temp.put(THIRD_COLUMN, res2 );
+
+            if (addedChangedRemoved == 2){
+                for(HashMap<String, String> a : list2){
+                    if(a.get("Second").equals(d.getID())){
+                        list2.remove(a);
+                        break;
+                    }
+                }
+                list2.add(temp);
+            }else if (addedChangedRemoved == 3){
+                list2.remove(temp);
+            }else if(addedChangedRemoved == 1){
+                list2.add(temp);
+            }
+
+            HashMap<String,String>[] harr =list2.toArray(new HashMap[list2.size()]);
+            sortList(harr);
+            ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<HashMap<String, String>>();
+
+            for(int i =0;i<list2.size();i++){
+                //Log.d("KKKKKKKKKK", harr[i].get("First"));
+                orderedlist2.add(harr[i]);
+            }
+            //Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
+
+            list2 = orderedlist2;//new ArrayList(Arrays.asList(harr));
+            final ListViewAdapter adapter3 = new ListViewAdapter(MainActivity.this, list2);
+//                  listView.setAdapter(adapter2);
+//                  adapter2.notifyDataSetChanged();
+            listView.setAdapter(adapter3);
+            adapterGlobal = (ListViewAdapter) listView.getAdapter();
+            adapter3.notifyDataSetChanged();
+        }
+    }
 }
+
+

@@ -299,26 +299,6 @@
       "longitude" : -121.718207,
       "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
       "visibilityRange" : 898
-    },
-    "15-2" : {
-      "deploymentDate" : {
-        "date" : 5,
-        "day" : 1,
-        "hours" : 10,
-        "minutes" : 17,
-        "month" : 1,
-        "seconds" : 55,
-        "time" : 1517854675601,
-        "timezoneOffset" : 480,
-        "year" : 118
-      },
-      "expirationTime" : 949,
-      "gearNumber" : "1",
-      "id" : "15",
-      "latitude" : 36.677681,
-      "longitude" : -121.7619853,
-      "uuid" : "eb02acfd-80fe-480a-b817-329395ff8b48",
-      "visibilityRange" : 989
     }
   }
 }

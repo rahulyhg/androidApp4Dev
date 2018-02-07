@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -35,6 +36,9 @@ public class DeployActivity extends AppCompatActivity {
     LocationManager locationManager;
     private DatabaseReference mDatabase;
     SharedPreferences settings;
+    Deployment myDepo;
+    boolean everythingOKwithUUID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,13 +121,13 @@ public class DeployActivity extends AppCompatActivity {
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 EditText editTextFisherName = (EditText) findViewById(R.id.editTextID);
                 EditText editTextGearNumber = (EditText) findViewById(R.id.editTextSerialNumber);
-                EditText editTextExpiration = (EditText) findViewById(R.id.editTextExpiration);
-                EditText editTextVisibility = (EditText) findViewById(R.id.editTextVisibility);
+                final EditText editTextExpiration = (EditText) findViewById(R.id.editTextExpiration);
+                final EditText editTextVisibility = (EditText) findViewById(R.id.editTextVisibility);
 
 
 
-                    String theFisherName = editTextFisherName.getText().toString();
-                    String theGearNumber = editTextGearNumber.getText().toString();
+                    final String theFisherName = editTextFisherName.getText().toString();
+                    final String theGearNumber = editTextGearNumber.getText().toString();
 
                 if (!theFisherName.equals("") && !theGearNumber.equals("") && !editTextExpiration.getText().toString().equals("")  && !editTextVisibility.getText().toString().equals("") ) {
                     int theExpiration = Integer.parseInt(editTextExpiration.getText().toString());
@@ -141,7 +145,7 @@ public class DeployActivity extends AppCompatActivity {
                     Date laDate = new Date();
                     //Log.d("DATEEEEEEEEEE", "DATE is: " + currentDate);
                     File installation;
-                    String elUUID;
+                   final String elUUID;
                     try {
                         installation = new File(DeployActivity.this.getFilesDir(), "INSTALLATION");
                         elUUID =  Installation.readInstallationFile(installation);
@@ -149,20 +153,60 @@ public class DeployActivity extends AppCompatActivity {
                         throw new RuntimeException(e);
                     }
 
-                    Deployment user = new Deployment(theFisherName,elUUID ,theGearNumber,latti,longi, theExpiration,theVisibility,laDate );
-
+                    final Deployment user = new Deployment(theFisherName,elUUID ,theGearNumber,latti,longi, theExpiration,theVisibility,laDate );
                     Random rnd = new Random();
                     int whatever = rnd.nextInt();
                     //String.valueOf(whatever)+"-"+
 
-                    mDatabase.child("deployments").child(theFisherName+"-"+theGearNumber).setValue(user);
+                    mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                        @Override
+                        public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                            myDepo =  dataSnapshot.child("deployments").child(theFisherName+"-"+theGearNumber).getValue(Deployment.class);
 
+                            if (myDepo == null){
+                                myDepo = user;
+                            }
 
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString("fisherName",theFisherName);
-                    editor.putString("expirationDays",editTextExpiration.getText().toString());
-                    editor.putString("visibilityRange",editTextVisibility.getText().toString());
-                    editor.commit();
+                            if( !myDepo.getUuid().equals(elUUID) ) {
+                                AlertDialog dialog45 = new AlertDialog.Builder(DeployActivity.this).setMessage("These name and gear number are taken").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                    }
+                                }).show();
+                                TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
+                                textView.setTextSize(25);
+                                everythingOKwithUUID = false;
+
+                            }else{
+                                mDatabase.child("deployments").child(theFisherName+"-"+theGearNumber).setValue(user);
+                                SharedPreferences.Editor editor = settings.edit();
+                                editor.putString("fisherName",theFisherName);
+                                editor.putString("expirationDays",editTextExpiration.getText().toString());
+                                editor.putString("visibilityRange",editTextVisibility.getText().toString());
+                                editor.commit();
+                                AlertDialog dialog = new AlertDialog.Builder(DeployActivity.this).setMessage("Deployment Information Saved").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        finish();
+                                    }
+                                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialogInterface) {
+                                        finish();
+                                    }
+                                }).show();
+
+                                TextView textView = (TextView) dialog.findViewById(android.R.id.message);
+                                textView.setTextSize(30);
+
+                                TextView textViewButton = (TextView) dialog.findViewById(android.R.id.button1);
+                                textViewButton.setTextSize(30);
+                                everythingOKwithUUID = true;
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
 
 
                 } else {
@@ -181,7 +225,8 @@ public class DeployActivity extends AppCompatActivity {
 
                     TextView textViewButton = (TextView) dialog.findViewById(android.R.id.button1);
                     textViewButton.setTextSize(25);
-                    return false;
+                    everythingOKwithUUID = false;
+                    return everythingOKwithUUID;
                 }
 
             } else {
@@ -191,7 +236,7 @@ public class DeployActivity extends AppCompatActivity {
             }
 
         }
-        return true;
+        return everythingOKwithUUID;
     }
 
     //Internal method for getting location.
