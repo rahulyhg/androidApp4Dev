@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.w("sdf", "Failed to read value.", error.toException());
                         }
                     });
-
+                    //START OF MAIN DIALOG
                     AlertDialog dialog5 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title2).setMessage(""+
                             "Gear  #" + gearN + "\n" +
                             "from fisher "+fisherName +"\n" +
@@ -340,8 +340,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }).show();
                     setDialog(dialog5,30,18,18,18);
+                    //END OF MAIN DIALOG
 
-                }         //END OF OnItemClick() METHOD
+                }//END OF OnItemClick() METHOD
             });
         }catch (Exception e){
             Log.d("e", "Quiiiii");
