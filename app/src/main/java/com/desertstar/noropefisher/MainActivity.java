@@ -14,7 +14,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -25,24 +24,22 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
+
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
+
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -52,12 +49,11 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.UUID;
 
 import static com.desertstar.noropefisher.Constants.FIRST_COLUMN;
 import static com.desertstar.noropefisher.Constants.SECOND_COLUMN;
 import static com.desertstar.noropefisher.Constants.THIRD_COLUMN;
-import static java.lang.Thread.sleep;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -193,18 +189,9 @@ public class MainActivity extends AppCompatActivity {
                                     "Visibility: "+ vi+" NM"
                             ).setPositiveButton("Release", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    File installation;
-                                    final String phoneUUID;
-                                    try {
-                                        installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
-                                        phoneUUID =  Installation.readInstallationFile(installation);
-                                    }catch (Exception e){
-                                        throw new RuntimeException(e);
-                                    }
+                                    final String phoneUUID = getPhoneUuid();
 
-
-
-                                    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                                    //DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
                                     dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
 
@@ -244,15 +231,8 @@ public class MainActivity extends AppCompatActivity {
                                                         //finish();
                                                     }
                                                 }).show();
-
                                                 setDialog(dialog2,25,25,25,0);
-//                                                TextView textView = (TextView) dialog2.findViewById(android.R.id.message);
-//                                                textView.setTextSize(25);
-//
-//                                                TextView textViewButton = (TextView) dialog2.findViewById(android.R.id.button1);
-//                                                textViewButton.setTextSize(25);
-//                                                TextView textViewButton2 = (TextView) dialog2.findViewById(android.R.id.button2);
-//                                                textViewButton2.setTextSize(25);
+
                                             }
                                         }
 
@@ -261,7 +241,6 @@ public class MainActivity extends AppCompatActivity {
                                     };
                                     dref.addListenerForSingleValueEvent(eventListener);
                                     //finish();
-
                                 }
                             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 @Override
@@ -288,31 +267,13 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }).show();
                             setDialog(dialog78,25,20,20,20);
-//                            TextView textView = (TextView) dialog78.findViewById(android.R.id.message);
-//                            textView.setTextSize(25);
-//                            TextView textViewButton = (TextView) dialog78.findViewById(android.R.id.button1);
-//                            textViewButton.setTextSize(20);
-//                            TextView textViewButton2 = (TextView) dialog78.findViewById(android.R.id.button2);
-//                            textViewButton2.setTextSize(20);
-//                            TextView textViewButton3 = (TextView) dialog78.findViewById(android.R.id.button3);
-//                            textViewButton3.setTextSize(20);
 
                         }
                     }).setNegativeButton("Release", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
-                            File installation;
-                            final String phoneUUID;
-                            try {
-                                installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
-                                phoneUUID =  Installation.readInstallationFile(installation);
-                            }catch (Exception e){
-                                throw new RuntimeException(e);
-                            }
-
-
+                            final String phoneUUID = getPhoneUuid();
 
                             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
@@ -355,13 +316,7 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         }).show();
                                         setDialog(dialog2,25,20,20,0);
-//                                        TextView textView = (TextView) dialog2.findViewById(android.R.id.message);
-//                                        textView.setTextSize(25);
-//
-//                                        TextView textViewButton = (TextView) dialog2.findViewById(android.R.id.button1);
-//                                        textViewButton.setTextSize(25);
-//                                        TextView textViewButton2 = (TextView) dialog2.findViewById(android.R.id.button2);
-//                                        textViewButton2.setTextSize(25);
+
                                     }
                                 }
 
@@ -385,38 +340,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }).show();
                     setDialog(dialog5,30,18,18,18);
-//                    TextView textView = (TextView) dialog5.findViewById(android.R.id.message);
-//                    textView.setTextSize(30);
-//                    TextView textViewButton = (TextView) dialog5.findViewById(android.R.id.button1);
-//                    textViewButton.setTextSize(18);
-//                    TextView textViewButton2 = (TextView) dialog5.findViewById(android.R.id.button2);
-//                    textViewButton2.setTextSize(18);
-//                    TextView textViewButton3 = (TextView) dialog5.findViewById(android.R.id.button3);
-//                    textViewButton3.setTextSize(18);
-
-                    //Object a2 = adapterGlobal.getItem(position);
-
 
                 }         //END OF OnItemClick() METHOD
             });
         }catch (Exception e){
-            Log.d("e", "Quieto parauuuuuu");
+            Log.d("e", "Quiiiii");
         }
         //END OF new OnItemClickListener() EVENT LISTENER
 
-
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView absListView, int i) {
-//
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-//                if (adapterGlobal != null && (i + i1 >1+ i2) )
-//                    adapterGlobal.notifyDataSetChanged();
-//            }
-//        });
 
 
         //GETTING REFERENCE TO FIREBASE DATABASE WITH ALL THE DEPLOYMENTS.
@@ -473,9 +404,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void startDirections(View view){
+    public void startDirections(String la, String lo){
         Intent intent = new Intent( Intent.ACTION_VIEW,
-                Uri.parse("https://www.google.com/maps/dir/?api=1&destination=Monterey&travelmode=driving&dir_action=navigate&travelmode"));
+                Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
@@ -590,16 +521,7 @@ public class MainActivity extends AppCompatActivity {
         double dist = calculator.distance(d.getLatitude(),lat2,d.getLongitude(),long2,0,0);
 
         String fisherUUID = d.getUuid();
-
-        File installation;
-        String phoneUUID;
-        try {
-            installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
-            phoneUUID =  Installation.readInstallationFile(installation);
-        }catch (Exception e){
-            throw new RuntimeException(e);
-        }
-
+        String phoneUUID = getPhoneUuid();
 
         dist = dist/1000;
         if(dist < MAX_DISTANCE_RANGE  && (  (fisherUUID.equals(phoneUUID) ) || ((dist *0.53996 <= d.getVisibilityRange())&&!isExpired) )){
@@ -660,24 +582,36 @@ http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#
     new AsyncTaskEx().execute();
  */
 
-public void setDialog(AlertDialog dialog78, int messageSize, int button1Size,int button2Size,int button3Size ){
-    TextView textView = (TextView) dialog78.findViewById(android.R.id.message);
-    textView.setTextSize(messageSize);
+    public void setDialog(AlertDialog dialog78, int messageSize, int button1Size,int button2Size,int button3Size ){
+        TextView textView = (TextView) dialog78.findViewById(android.R.id.message);
+        textView.setTextSize(messageSize);
 
-    TextView textViewButton = (TextView) dialog78.findViewById(android.R.id.button1);
-    if(textViewButton != null){
-        textViewButton.setTextSize(button1Size);
-    }
-    TextView textViewButton2 = (TextView) dialog78.findViewById(android.R.id.button2);
-    if(textViewButton2 != null){
-        textViewButton2.setTextSize(button2Size);
+        TextView textViewButton = (TextView) dialog78.findViewById(android.R.id.button1);
+        if(textViewButton != null){
+            textViewButton.setTextSize(button1Size);
+        }
+        TextView textViewButton2 = (TextView) dialog78.findViewById(android.R.id.button2);
+        if(textViewButton2 != null){
+            textViewButton2.setTextSize(button2Size);
+        }
+
+        TextView textViewButton3 = (TextView) dialog78.findViewById(android.R.id.button3);
+        if(textViewButton3 != null){
+            textViewButton3.setTextSize(button3Size);
+        }
     }
 
-    TextView textViewButton3 = (TextView) dialog78.findViewById(android.R.id.button3);
-    if(textViewButton3 != null){
-        textViewButton3.setTextSize(button3Size);
+    public String getPhoneUuid(){
+        File installation;
+        String phoneUUID;
+        try {
+            installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
+            phoneUUID =  Installation.readInstallationFile(installation);
+            return phoneUUID;
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
-}
 }
 
 
