@@ -493,6 +493,8 @@ public class MainActivity extends AppCompatActivity {
         dref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                poblateListView(dataSnapshot,prevChildKey, 1);
+                /*
                 Deployment d = dataSnapshot.getValue(Deployment.class);
                 locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                 double location [] = getLocation();
@@ -575,12 +577,14 @@ public class MainActivity extends AppCompatActivity {
                     listView.setAdapter(adapter3);
                     adapterGlobal = (ListViewAdapter) listView.getAdapter();
                     adapter3.notifyDataSetChanged();
-                }
+                }*/
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                poblateListView(dataSnapshot,s,2);
+                /*
                 Log.d("Key", dataSnapshot.getKey());
                 Deployment d = dataSnapshot.getValue(Deployment.class);
                 Log.d("dep", d.toString());
@@ -633,15 +637,16 @@ public class MainActivity extends AppCompatActivity {
                     String res2 =df2.format(dist*0.53996);
                     temp.put(THIRD_COLUMN, res2 );
                     for(HashMap<String, String> a : list2){
-                        //Log.d("compa fisher: "+d.getID(), "con: "+a.get("First"));
+                        Log.d("compa fisher: "+d.getID(), "con: "+a.get("First"));
 
-                        if(a.get("Second").equals(d.getID())){
+                        if(a.get("Second").equals(d.getGearNumber())){
+                            Log.d("remove","removed");
                             list2.remove(a);
                             break;
                         }
                     }
-                    if(list2.size() <=11)
-                        list2.add(temp);
+                    //if(list2.size() <=11)
+                    list2.add(temp);
                     //Log.d("AAAAAAABBBBBBBBBBBBBBB", list2.toString());
 
 
@@ -669,44 +674,15 @@ public class MainActivity extends AppCompatActivity {
                     listView.setAdapter(adapter3);
                     adapterGlobal = (ListViewAdapter) listView.getAdapter();
                     adapter3.notifyDataSetChanged();
-                }
+                }*/
 
 
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-/*                String key = dataSnapshot.getKey();
-
-                ///////////////////////////FIX/////////////////////////////////////
-
-                for (int i = 0; i < list2.size(); i++) {
-                    // Find the item to remove and then remove it by index
-                    HashMap a = list2.get(i);
-                    Object b=a.get(key);
-                    if (b!=null) {
-                        list2.remove(i);
-                        break;
-                    }
-                }
-                ////////////////////////////////////////////////////////////////////////
-
-//                list.remove(dataSnapshot.getValue(Deployment.class));
-//                adapter.notifyDataSetChanged();
-//
-//                list2.remove(dataSnapshot.getValue(Deployment.class));
-                //listView.setAdapter(adapter2);  //CHEEEEEEEEEEECKKK
-                adapter2.notifyDataSetChanged();*/
-
-
-
-//                final ListViewAdapter adapter4= new ListViewAdapter(MainActivity.this,  new ArrayList<HashMap<String,String>>());
-////                    listView.setAdapter(adapter2);
-////                    adapter2.notifyDataSetChanged();
-//                listView.setAdapter(adapter4);
-//                //adapterGlobal = (ListViewAdapter) listView.getAdapter();
-//                adapter4.notifyDataSetChanged();
-//                SystemClock.sleep(5000);
+                poblateListView(dataSnapshot,"",3);
+                /*
                 Deployment d = dataSnapshot.getValue(Deployment.class);
                 locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                 double location [] = getLocation();
@@ -786,7 +762,7 @@ public class MainActivity extends AppCompatActivity {
                     listView.setAdapter(adapter3);
                     adapterGlobal = (ListViewAdapter) listView.getAdapter();
                     adapter3.notifyDataSetChanged();
-                }
+                }*/
             }
 
             @Override
@@ -1054,7 +1030,7 @@ http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#
 
             if (addedChangedRemoved == 2){
                 for(HashMap<String, String> a : list2){
-                    if(a.get("Second").equals(d.getID())){
+                    if(a.get("Second").equals(d.getGearNumber())){
                         list2.remove(a);
                         break;
                     }
@@ -1074,7 +1050,6 @@ http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#
                 //Log.d("KKKKKKKKKK", harr[i].get("First"));
                 orderedlist2.add(harr[i]);
             }
-            //Log.d("AAAAAAABBBBBBBBBBBBBBB", orderedlist2.toString());
 
             list2 = orderedlist2;//new ArrayList(Arrays.asList(harr));
             final ListViewAdapter adapter3 = new ListViewAdapter(MainActivity.this, list2);
