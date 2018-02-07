@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         settings = getSharedPreferences("com.desertstar.noropefisher", Context.MODE_PRIVATE);
 
-        String elUUID = Installation.id(this);
+        //String elUUID = Installation.id(this);
 
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
@@ -97,10 +97,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         //List View with the table
-        listView = (ListView)findViewById(R.id.database_list_view);
+        listView = findViewById(R.id.database_list_view);
 
         //List with the different HashMap (1st-ID, 2nd-Serial# and 3rd-Distance)
-        list2=new ArrayList<HashMap<String,String>>();
+        list2=new ArrayList<>();
 
         //Custom Adapter with list2 as parameter
         final ListViewAdapter adapter2=new ListViewAdapter(this, list2);
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //GETTING THE CLICKED DEPLOYMENT BY RETRIVING IT FROM THE GLOBAL ADAPTER SPECIFYING ITS LOCATION IN THE LISTVIEW WITH 'position' VAR.
                     final Object theDeployment = adapterGlobal.getItem(position);
-                    HashMap<String,String> a = ((HashMap<String,String>) theDeployment);
+                    HashMap<String,String> a = (HashMap<String,String>) theDeployment;
                     fisherName = a.get("First");
                     gearN = a.get("Second");
 
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                                             Object algo = dataSnapshot.getValue();
                                             String s = (String)algo;
 
-                                            if( !s.equals(phoneUUID) ) {
+                                            if(s != null && !s.equals(phoneUUID) ) {
                                                 AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {
                                                     }
@@ -275,13 +275,14 @@ public class MainActivity extends AppCompatActivity {
                                     Object algo = dataSnapshot.getValue();
                                     String s = (String)algo;
 
-                                    if( !s.equals(phoneUUID) ) {
+                                    if(s !=null && !s.equals(phoneUUID) ) {
                                         AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
                                             }
                                         }).show();
-                                        TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
-                                        textView.setTextSize(25);
+                                        setDialog(dialog45,25,0,0,0);
+//                                        TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
+//                                        textView.setTextSize(25);
                                     }else{
                                         FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
                                         AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
@@ -342,17 +343,17 @@ public class MainActivity extends AppCompatActivity {
         dref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-                poblateListView(dataSnapshot,prevChildKey, 1);
+                poblateListView(dataSnapshot, 1);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                poblateListView(dataSnapshot,s,2);
+                poblateListView(dataSnapshot,2);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                poblateListView(dataSnapshot,"",3);
+                poblateListView(dataSnapshot,3);
             }
 
             @Override
@@ -452,68 +453,78 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Code to execute asynchronous tasks in the background.
-    private class AsyncTaskEx extends AsyncTask<Void, Void, Void> {
-        /** The system calls this to perform work in a worker thread and
-         * delivers it the parameters given to AsyncTask.execute() */
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            //StartTimer();//call your method here it will run in background
-            return null;
-        }
+//    private class AsyncTaskEx extends AsyncTask<Void, Void, Void> {
+//        /** The system calls this to perform work in a worker thread and
+//         * delivers it the parameters given to AsyncTask.execute() */
+//        @Override
+//        protected Void doInBackground(Void... arg0) {
+//            //StartTimer();//call your method here it will run in background
+//            return null;
+//        }
+//
+//        /** The system calls this to perform work in the UI thread and delivers
+//         * the result from doInBackground() */
+//        @Override
+//        protected void onPostExecute(Void result) {
+//            //Write some code you want to execute on UI after doInBackground() completes
+//            return ;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            //Write some code you want to execute on UI before doInBackground() starts
+//            return ;
+//        }
+//    }
 
-        /** The system calls this to perform work in the UI thread and delivers
-         * the result from doInBackground() */
-        @Override
-        protected void onPostExecute(Void result) {
-            //Write some code you want to execute on UI after doInBackground() completes
-            return ;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            //Write some code you want to execute on UI before doInBackground() starts
-            return ;
-        }
-    }
-
-    public void poblateListView(DataSnapshot dataSnapshot, String s, int addedChangedRemoved){
+    public void poblateListView(DataSnapshot dataSnapshot, int addedChangedRemoved){
         Deployment d = dataSnapshot.getValue(Deployment.class);
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         double location [] = getLocation();
         double lat2 = location[0];
         double long2 =  location[1];
+        Date daysAddedDate =new Date();  //OJO
 
-        Date daysAddedDate = addDays(d.getDeploymentDate(),d.getExpirationTime());
+        if(d != null){
+            daysAddedDate = addDays(d.getDeploymentDate(),d.getExpirationTime());
+        }
+
 
         //IF dayDif is 1 the trap has NOT expired yet. Meaning today's date (the argument) is less than the daysAddedDate.
         int dayDif = daysAddedDate.compareTo(new Date());
-        String isExpiredSt;
         boolean isExpired;
         if(dayDif <0){
-            isExpiredSt = "TRAP EXPIRED~~~";
             isExpired=true;
         }else if (dayDif ==0){
-            isExpiredSt = "TRAP EXPIRES now";
             isExpired=true;
         }else{
-            isExpiredSt = "TRAP OK";
             isExpired=false;
         }
 
 
         DecimalFormat df2 = new DecimalFormat(".##");
         DistanceCalculator calculator = new DistanceCalculator();
+        double dist = 0;//OJO
+        String fisherUUID = "";//OJO
+        double visibilityRange=0.0;
+        String elID = "";
+        String gearNumber = "";
 
-        double dist = calculator.distance(d.getLatitude(),lat2,d.getLongitude(),long2,0,0);
+        if(d != null){
+            dist = calculator.distance(d.getLatitude(),lat2,d.getLongitude(),long2,0,0);
+            fisherUUID = d.getUuid();
+            visibilityRange = d.getVisibilityRange();
+            elID = d.getID();
+            gearNumber = d.getGearNumber();
+        }
 
-        String fisherUUID = d.getUuid();
         String phoneUUID = getPhoneUuid();
 
         dist = dist/1000;
-        if(dist < MAX_DISTANCE_RANGE  && (  (fisherUUID.equals(phoneUUID) ) || ((dist *0.53996 <= d.getVisibilityRange())&&!isExpired) )){
-            HashMap<String,String> temp=new HashMap<String, String>();
-            temp.put(FIRST_COLUMN, d.getID());
-            temp.put(SECOND_COLUMN, d.getGearNumber());
+        if(dist < MAX_DISTANCE_RANGE  && (  (fisherUUID.equals(phoneUUID) ) || ((dist *0.53996 <= visibilityRange)&&!isExpired) )){
+            HashMap<String,String> temp=new HashMap<>();
+            temp.put(FIRST_COLUMN, elID);
+            temp.put(SECOND_COLUMN, gearNumber);
 
 
             String res2 =df2.format(dist*0.53996);
@@ -521,7 +532,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (addedChangedRemoved == 2){
                 for(HashMap<String, String> a : list2){
-                    if(a.get("Second").equals(d.getGearNumber())){
+                    if(a.get("Second").equals(gearNumber)){
                         list2.remove(a);
                         break;
                     }
@@ -535,10 +546,9 @@ public class MainActivity extends AppCompatActivity {
 
             HashMap<String,String>[] harr =list2.toArray(new HashMap[list2.size()]);
             sortList(harr);
-            ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<HashMap<String, String>>();
+            ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<>();
 
             for(int i =0;i<list2.size();i++){
-                //Log.d("KKKKKKKKKK", harr[i].get("First"));
                 orderedlist2.add(harr[i]);
             }
 
@@ -569,19 +579,22 @@ http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#
  */
 
     public void setDialog(AlertDialog dialog78, int messageSize, int button1Size,int button2Size,int button3Size ){
-        TextView textView = (TextView) dialog78.findViewById(android.R.id.message);
-        textView.setTextSize(messageSize);
 
-        TextView textViewButton = (TextView) dialog78.findViewById(android.R.id.button1);
+        TextView textView =  dialog78.findViewById(android.R.id.message);
+        if(textView != null){
+            textView.setTextSize(messageSize);
+        }
+
+        TextView textViewButton =  dialog78.findViewById(android.R.id.button1);
         if(textViewButton != null){
             textViewButton.setTextSize(button1Size);
         }
-        TextView textViewButton2 = (TextView) dialog78.findViewById(android.R.id.button2);
+        TextView textViewButton2 =  dialog78.findViewById(android.R.id.button2);
         if(textViewButton2 != null){
             textViewButton2.setTextSize(button2Size);
         }
 
-        TextView textViewButton3 = (TextView) dialog78.findViewById(android.R.id.button3);
+        TextView textViewButton3 =  dialog78.findViewById(android.R.id.button3);
         if(textViewButton3 != null){
             textViewButton3.setTextSize(button3Size);
         }
