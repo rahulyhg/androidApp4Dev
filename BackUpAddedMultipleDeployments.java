@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
         //textView.setText(elUUID);
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         setContentView(R.layout.activity_main);
 
 
@@ -146,345 +147,329 @@ public class MainActivity extends AppCompatActivity {
         //Setting up the adapter into the ListView
         listView.setAdapter(adapter2);
 
-
-
+        try {
+        //BEGINNING OF ONCLICK EVENT LISTENER
         //Listener for the ListView (To Pop-Up the Alert Dialog with the clicked Deployment's info)
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
-                //int pos=position+1;
-                //Toast.makeText(MainActivity.this, Integer.toString(pos)+" Clicked", Toast.LENGTH_SHORT).show();
-                title.setText("Deployment Information:");
-                title.setGravity(Gravity.CENTER);
-                title.setTextSize(25);
-                title.setTypeface(null, Typeface.BOLD);
+                @Override
+                public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
+                {
+                    //int pos=position+1;
+                    //Toast.makeText(MainActivity.this, Integer.toString(pos)+" Clicked", Toast.LENGTH_SHORT).show();
+                    title.setText("Deployment Information:");
+                    title.setGravity(Gravity.CENTER);
+                    title.setTextSize(25);
+                    title.setTypeface(null, Typeface.BOLD);
 
-                title.setBackgroundColor(Color.parseColor("#3E50B4"));
-                title.setTextColor(Color.WHITE);
+                    title.setBackgroundColor(Color.parseColor("#3E50B4"));
+                    title.setTextColor(Color.WHITE);
 
-                title2.setText("Deployment Information:");
-                title2.setGravity(Gravity.CENTER);
-                title2.setTextSize(25);
-                title2.setTypeface(null, Typeface.BOLD);
+                    title2.setText("Deployment Information:");
+                    title2.setGravity(Gravity.CENTER);
+                    title2.setTextSize(25);
+                    title2.setTypeface(null, Typeface.BOLD);
 
-                title2.setBackgroundColor(Color.parseColor("#3E50B4"));
-                title2.setTextColor(Color.WHITE);
+                    title2.setBackgroundColor(Color.parseColor("#3E50B4"));
+                    title2.setTextColor(Color.WHITE);
 
-                //dialog.setCustomTitle(title);
 
-                //GETTING THE CLICKED DEPLOYMENT BY RETRIVING IT FROM THE GLOBAL ADAPTER SPECIFYING ITS LOCATION IN THE LISTVIEW WITH 'position' VAR.
-                final Object theDeployment = adapterGlobal.getItem(position);
-                HashMap<String,String> a = ((HashMap<String,String>) theDeployment);
-                fisherName = a.get("First");
-                gearN = a.get("Second");
+                    //GETTING THE CLICKED DEPLOYMENT BY RETRIVING IT FROM THE GLOBAL ADAPTER SPECIFYING ITS LOCATION IN THE LISTVIEW WITH 'position' VAR.
+                    final Object theDeployment = adapterGlobal.getItem(position);
+                    HashMap<String,String> a = ((HashMap<String,String>) theDeployment);
+                    fisherName = a.get("First");
+                    gearN = a.get("Second");
 
-                ///*DELETE
-                Class sd = theDeployment.getClass();
-                String typename = sd.getName();
-                //Log.d("Typename", typename);
-                //*/
+                    ///*DELETE
+                    Class sd = theDeployment.getClass();
+                    String typename = sd.getName();
+                    //Log.d("Typename", typename);
+                    //*/
 
-                //VAMOS CON OTRO!! O PARAAA!!
+                    //GETTING REFERENCE TO FISHERMAN SPECIFIC DEPLOYMENT
+                    dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+gearN);
+                    // Read from the database
+                    dref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // This method is called once with the initial value and again
+                            // whenever data at this location is updated.
+                            clickedDeploymentData = dataSnapshot.getValue(Deployment.class);
 
-                dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+gearN);
-                // Read from the database
-                dref.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // This method is called once with the initial value and again
-                        // whenever data at this location is updated.
-                        clickedDeploymentData = dataSnapshot.getValue(Deployment.class);
+                            if (clickedDeploymentData != null) {
+                                g = clickedDeploymentData.getGearNumber();
+                                la = String.valueOf(clickedDeploymentData.getLatitude()) ;
+                                lo = String.valueOf(clickedDeploymentData.getLongitude());
+                                da = clickedDeploymentData.getDeploymentDate().toString();
+                                ex = String.valueOf(clickedDeploymentData.getExpirationTime());
+                                vi = String.valueOf(clickedDeploymentData.getVisibilityRange());
 
-                        if (clickedDeploymentData != null) {
-                            g = clickedDeploymentData.getGearNumber();
-                            la = String.valueOf(clickedDeploymentData.getLatitude()) ;
-                            lo = String.valueOf(clickedDeploymentData.getLongitude());
-                            da = clickedDeploymentData.getDeploymentDate().toString();
-                            ex = String.valueOf(clickedDeploymentData.getExpirationTime());
-                            vi = String.valueOf(clickedDeploymentData.getVisibilityRange());
-
+                            }
                         }
-                    }
+                        @Override
+                        public void onCancelled(DatabaseError error) {
+                            // Failed to read value
+                            Log.w("sdf", "Failed to read value.", error.toException());
+                        }
+                    });
 
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        // Failed to read value
-                        Log.w("sdf", "Failed to read value.", error.toException());
-                    }
-                });
-
-                //g = clickedDeploymentData.getGearNumber();
-//                double la = clickedDeploymentData.getLatitude() ;
-//                double lo = clickedDeploymentData.getLongitude();
-//                Date da = clickedDeploymentData.getDeploymentDate();
-//                int  ex = clickedDeploymentData.getExpirationTime();
-//                int vi = clickedDeploymentData.getVisibilityRange();
+                    //g = clickedDeploymentData.getGearNumber();
+    //                double la = clickedDeploymentData.getLatitude() ;
+    //                double lo = clickedDeploymentData.getLongitude();
+    //                Date da = clickedDeploymentData.getDeploymentDate();
+    //                int  ex = clickedDeploymentData.getExpirationTime();
+    //                int vi = clickedDeploymentData.getVisibilityRange();
 
 
-                DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
+                    DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
 
-                String avcbbvg = mDatabase.child("deployments").child(fisherName+"-"+g).getKey();
-                //Log.d("yokeseeeeee", avcbbvg);
-
-
-                //Log.d("SACADO DE LA LISTAAAAAA", String.valueOf(position));
-//                g = depList.get(position).getGearNumber();
-//                la = String.valueOf(depList.get(position).getLatitude()) ;
-//                lo = String.valueOf(depList.get(position).getLongitude());
-//                da = depList.get(position).getDeploymentDate().toString();
-//                ex = String.valueOf(depList.get(position).getExpirationTime());
-//                vi = String.valueOf(depList.get(position).getVisibilityRange());
-                AlertDialog dialog5 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title2).setMessage(""+
-                        "Gear  #" + gearN + "\n" +
-                        "from fisher "+fisherName +"\n" +
-                        "\n\nRelease Deployment?"
-                ).setPositiveButton("Details", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        AlertDialog dialog78 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title).setMessage("" + //.setTitle("Deployment Information: \n")
-                                "Fisher: "+fisherName +"\n" +
-                                "Gear Number: " + g + "\n" +
-                                "Latitude: "+ la  +" \n" +
-                                "Longitude: "+ lo  +"\n" +
-                                "Deployed on:\n"+ da  +" \n" +
-                                "Expires in: "+ ex  +" days \n" +
-                                "Visibility: "+ vi+" NM"
-                        ).setPositiveButton("Release", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                File installation;
-                                final String phoneUUID;
-                                try {
-                                    installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
-                                    phoneUUID =  Installation.readInstallationFile(installation);
-                                }catch (Exception e){
-                                    throw new RuntimeException(e);
-                                }
+                    String avcbbvg = mDatabase.child("deployments").child(fisherName+"-"+g).getKey();
+                    //Log.d("yokeseeeeee", avcbbvg);
 
 
-
-                                DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                                //Log.d("el fisher: ", fisherName);
-                                //Log.d("uuid del telefono: ", phoneUUID);
-
-                                //String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
-
-                                dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
-
-                                //DatabaseReference userNameRef = rootRef.child("deployments").child(fisherName).child(phoneUUID);
-                                ValueEventListener eventListener = new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Object algo = dataSnapshot.getValue();
-                                        String s = (String)algo;
-                                        //Log.d("s: ", s);
-
-                                        if( !s.equals(phoneUUID) ) {
-                                            AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                }
-                                            }).show();
-                                            TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
-                                            textView.setTextSize(25);
-                                        }else{
-                                            FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
-                                            AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    String a = la;
-                                                    String b = lo;
-                                                    Intent intent = new Intent( Intent.ACTION_VIEW,
-                                                            Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
-                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                                                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                                                    startActivity(intent);
-                                                }
-                                            }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                                @Override
-                                                public void onDismiss(DialogInterface dialogInterface) {
-                                                    //finish();
-                                                }
-                                            }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    //finish();
-                                                }
-                                            }).show();
-                                            TextView textView = (TextView) dialog2.findViewById(android.R.id.message);
-                                            textView.setTextSize(25);
-
-                                            TextView textViewButton = (TextView) dialog2.findViewById(android.R.id.button1);
-                                            textViewButton.setTextSize(25);
-                                            TextView textViewButton2 = (TextView) dialog2.findViewById(android.R.id.button2);
-                                            textViewButton2.setTextSize(25);                                }
+                    //Log.d("SACADO DE LA LISTAAAAAA", String.valueOf(position));
+    //                g = depList.get(position).getGearNumber();
+    //                la = String.valueOf(depList.get(position).getLatitude()) ;
+    //                lo = String.valueOf(depList.get(position).getLongitude());
+    //                da = depList.get(position).getDeploymentDate().toString();
+    //                ex = String.valueOf(depList.get(position).getExpirationTime());
+    //                vi = String.valueOf(depList.get(position).getVisibilityRange());
+                    AlertDialog dialog5 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title2).setMessage(""+
+                            "Gear  #" + gearN + "\n" +
+                            "from fisher "+fisherName +"\n" +
+                            "\n\nRelease Deployment?"
+                    ).setPositiveButton("Details", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            AlertDialog dialog78 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title).setMessage("" + //.setTitle("Deployment Information: \n")
+                                    "Fisher: "+fisherName +"\n" +
+                                    "Gear Number: " + g + "\n" +
+                                    "Latitude: "+ la  +" \n" +
+                                    "Longitude: "+ lo  +"\n" +
+                                    "Deployed on:\n"+ da  +" \n" +
+                                    "Expires in: "+ ex  +" days \n" +
+                                    "Visibility: "+ vi+" NM"
+                            ).setPositiveButton("Release", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    File installation;
+                                    final String phoneUUID;
+                                    try {
+                                        installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
+                                        phoneUUID =  Installation.readInstallationFile(installation);
+                                    }catch (Exception e){
+                                        throw new RuntimeException(e);
                                     }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {}
-                                };
-                                dref.addListenerForSingleValueEvent(eventListener);
-                                //finish();
-
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //nothing
-                            }
-                        }).setNeutralButton("Map", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                String a = la;
-                                String b = lo;
-                                Intent intent = new Intent( Intent.ACTION_VIEW,
-                                        Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                                startActivity(intent);
-                            }
-                        }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialogInterface) {
-                                //To avoid ERROR: The specified child already has a parent. You must call removeView() on the child's parent first.
-                                if(title.getParent()!=null)
-                                    ((ViewGroup)title.getParent()).removeView(title);
-                            }
-                        }).show();
-
-                        TextView textView = (TextView) dialog78.findViewById(android.R.id.message);
-                        textView.setTextSize(25);
-                        TextView textViewButton = (TextView) dialog78.findViewById(android.R.id.button1);
-                        textViewButton.setTextSize(20);
-                        TextView textViewButton2 = (TextView) dialog78.findViewById(android.R.id.button2);
-                        textViewButton2.setTextSize(20);
-                        TextView textViewButton3 = (TextView) dialog78.findViewById(android.R.id.button3);
-                        textViewButton3.setTextSize(20);
-
-                    }
-                }).setNegativeButton("Release", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
-                        File installation;
-                        final String phoneUUID;
-                        try {
-                            installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
-                            phoneUUID =  Installation.readInstallationFile(installation);
-                        }catch (Exception e){
-                            throw new RuntimeException(e);
+                                    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                                    //Log.d("el fisher: ", fisherName);
+                                    //Log.d("uuid del telefono: ", phoneUUID);
+
+                                    //String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
+
+                                    dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
+
+                                    //DatabaseReference userNameRef = rootRef.child("deployments").child(fisherName).child(phoneUUID);
+                                    ValueEventListener eventListener = new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            Object algo = dataSnapshot.getValue();
+                                            String s = (String)algo;
+                                            //Log.d("s: ", s);
+
+                                            if( !s.equals(phoneUUID) ) {
+                                                AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                    }
+                                                }).show();
+                                                TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
+                                                textView.setTextSize(25);
+                                            }else{
+                                                FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
+                                                AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        String a = la;
+                                                        String b = lo;
+                                                        Intent intent = new Intent( Intent.ACTION_VIEW,
+                                                                Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
+                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                                                        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                                                        startActivity(intent);
+                                                    }
+                                                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                                    @Override
+                                                    public void onDismiss(DialogInterface dialogInterface) {
+                                                        //finish();
+                                                    }
+                                                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        //finish();
+                                                    }
+                                                }).show();
+                                                TextView textView = (TextView) dialog2.findViewById(android.R.id.message);
+                                                textView.setTextSize(25);
+
+                                                TextView textViewButton = (TextView) dialog2.findViewById(android.R.id.button1);
+                                                textViewButton.setTextSize(25);
+                                                TextView textViewButton2 = (TextView) dialog2.findViewById(android.R.id.button2);
+                                                textViewButton2.setTextSize(25);                                }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {}
+                                    };
+                                    dref.addListenerForSingleValueEvent(eventListener);
+                                    //finish();
+
+                                }
+                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    //nothing
+                                }
+                            }).setNeutralButton("Map", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    String a = la;
+                                    String b = lo;
+                                    Intent intent = new Intent( Intent.ACTION_VIEW,
+                                            Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                                    startActivity(intent);
+                                }
+                            }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialogInterface) {
+                                    //To avoid ERROR: The specified child already has a parent. You must call removeView() on the child's parent first.
+                                    if(title.getParent()!=null)
+                                        ((ViewGroup)title.getParent()).removeView(title);
+                                }
+                            }).show();
+
+                            TextView textView = (TextView) dialog78.findViewById(android.R.id.message);
+                            textView.setTextSize(25);
+                            TextView textViewButton = (TextView) dialog78.findViewById(android.R.id.button1);
+                            textViewButton.setTextSize(20);
+                            TextView textViewButton2 = (TextView) dialog78.findViewById(android.R.id.button2);
+                            textViewButton2.setTextSize(20);
+                            TextView textViewButton3 = (TextView) dialog78.findViewById(android.R.id.button3);
+                            textViewButton3.setTextSize(20);
+
                         }
+                    }).setNegativeButton("Release", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
-
-                        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                        //Log.d("el fisher: ", fisherName);
-                        //Log.d("uuid del telefono: ", phoneUUID);
-
-                        //String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
-
-                        Log.d("G",g);
-                        dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
-
-                        //DatabaseReference userNameRef = rootRef.child("deployments").child(fisherName).child(phoneUUID);
-                        ValueEventListener eventListener = new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                Object algo = dataSnapshot.getValue();
-                                String s = (String)algo;
-                                //Log.d("s: ", s);
-
-                                if( !s.equals(phoneUUID) ) {
-                                    AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                        }
-                                    }).show();
-                                    TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
-                                    textView.setTextSize(25);
-                                }else{
-                                    FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
-                                    AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            String a = la;
-                                            String b = lo;
-                                            Intent intent = new Intent( Intent.ACTION_VIEW,
-                                                    Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                                            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                                            startActivity(intent);                            }
-                                    }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                        @Override
-                                        public void onDismiss(DialogInterface dialogInterface) {
-                                            //finish();
-                                        }
-                                    }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            //finish();
-                                        }
-                                    }).show();
-                                    TextView textView = (TextView) dialog2.findViewById(android.R.id.message);
-                                    textView.setTextSize(25);
-
-                                    TextView textViewButton = (TextView) dialog2.findViewById(android.R.id.button1);
-                                    textViewButton.setTextSize(25);
-                                    TextView textViewButton2 = (TextView) dialog2.findViewById(android.R.id.button2);
-                                    textViewButton2.setTextSize(25);                                }
+                            File installation;
+                            final String phoneUUID;
+                            try {
+                                installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
+                                phoneUUID =  Installation.readInstallationFile(installation);
+                            }catch (Exception e){
+                                throw new RuntimeException(e);
                             }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {}
-                        };
-                        dref.addListenerForSingleValueEvent(eventListener);
 
 
+                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                            //Log.d("el fisher: ", fisherName);
+                            //Log.d("uuid del telefono: ", phoneUUID);
 
+                            //String ruta = "deployments/"+fisherName+"/uuid/"+phoneUUID ;
 
+                            Log.d("G",g);
+                            dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
 
+                            //DatabaseReference userNameRef = rootRef.child("deployments").child(fisherName).child(phoneUUID);
+                            ValueEventListener eventListener = new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Object algo = dataSnapshot.getValue();
+                                    String s = (String)algo;
+                                    //Log.d("s: ", s);
 
+                                    if( !s.equals(phoneUUID) ) {
+                                        AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                            }
+                                        }).show();
+                                        TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
+                                        textView.setTextSize(25);
+                                    }else{
+                                        FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
+                                        AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                String a = la;
+                                                String b = lo;
+                                                Intent intent = new Intent( Intent.ACTION_VIEW,
+                                                        Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                                                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                                                startActivity(intent);                            }
+                                        }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialogInterface) {
+                                                //finish();
+                                            }
+                                        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                //finish();
+                                            }
+                                        }).show();
+                                        TextView textView = (TextView) dialog2.findViewById(android.R.id.message);
+                                        textView.setTextSize(25);
 
+                                        TextView textViewButton = (TextView) dialog2.findViewById(android.R.id.button1);
+                                        textViewButton.setTextSize(25);
+                                        TextView textViewButton2 = (TextView) dialog2.findViewById(android.R.id.button2);
+                                        textViewButton2.setTextSize(25);                                }
+                                }
 
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {}
+                            };
+                            dref.addListenerForSingleValueEvent(eventListener);
+                            //Log.d("FISHERNAME: ", fisherName);
+                            //Log.d("id telefono: ", phoneUUID);
+                            //Log.d("es su TRAP?", a);
+                            //finish();
 
-                        //Log.d("FISHERNAME: ", fisherName);
-                        //Log.d("id telefono: ", phoneUUID);
-                        //Log.d("es su TRAP?", a);
+                        }
+                    }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                            //To avoid ERROR: The specified child already has a parent. You must call removeView() on the child's parent first.
+                            if(title2.getParent()!=null)
+                                ((ViewGroup)title2.getParent()).removeView(title2);
+                        }
+                    }).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //nothing
+                        }
+                    }).show();
+                    TextView textView = (TextView) dialog5.findViewById(android.R.id.message);
+                    textView.setTextSize(30);
+                    TextView textViewButton = (TextView) dialog5.findViewById(android.R.id.button1);
+                    textViewButton.setTextSize(18);
+                    TextView textViewButton2 = (TextView) dialog5.findViewById(android.R.id.button2);
+                    textViewButton2.setTextSize(18);
+                    TextView textViewButton3 = (TextView) dialog5.findViewById(android.R.id.button3);
+                    textViewButton3.setTextSize(18);
 
+                    Object a2 = adapterGlobal.getItem(position);
+                    //Log.d("OBJETOOOOOOO", a2.toString());
 
-
-
-                        //finish();
-
-                    }
-                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        //To avoid ERROR: The specified child already has a parent. You must call removeView() on the child's parent first.
-                        if(title2.getParent()!=null)
-                            ((ViewGroup)title2.getParent()).removeView(title2);
-                    }
-                }).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //nothing
-                    }
-                }).show();
-
-
-
-                TextView textView = (TextView) dialog5.findViewById(android.R.id.message);
-                textView.setTextSize(30);
-
-                TextView textViewButton = (TextView) dialog5.findViewById(android.R.id.button1);
-                textViewButton.setTextSize(18);
-                TextView textViewButton2 = (TextView) dialog5.findViewById(android.R.id.button2);
-                textViewButton2.setTextSize(18);
-                TextView textViewButton3 = (TextView) dialog5.findViewById(android.R.id.button3);
-                textViewButton3.setTextSize(18);
-
-                Object a2 = adapterGlobal.getItem(position);
-                //Log.d("OBJETOOOOOOO", a2.toString());
-
-            }
-        });
+                }         //END OF OnItemClick() METHOD
+            });
+        }catch (Exception e){
+            Log.d("e", "Quieto parauuuuuu");
+        }
+        //END OF new OnItemClickListener() EVENT LISTENER
 
 
 //        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -501,11 +486,10 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
 
-        //SystemClock.sleep(1000);   SLEEPO
 
-        //Getting reference to Firebase Database with all the deployments.
+        //GETTING REFERENCE TO FIREBASE DATABASE WITH ALL THE DEPLOYMENTS.
         dref = FirebaseDatabase.getInstance().getReference("deployments");
-        //Adding listener to the DB reference, add child event listener <-IMPORTANT to notice what kind of event.
+        //ADDING listener to the DB reference, add child event listener <-IMPORTANT to notice what kind of event.
         dref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
@@ -1002,6 +986,12 @@ public class MainActivity extends AppCompatActivity {
             return ;
         }
     }
+
+
+
+
+
+
 
 /*
 https://stackoverflow.com/questions/10733682/make-a-specific-code-run-in-background
