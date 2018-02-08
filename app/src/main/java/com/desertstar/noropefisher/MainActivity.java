@@ -82,12 +82,12 @@ public class MainActivity extends AppCompatActivity {
     String  ex = "1";
     String vi ="2";
     Deployment clickedDeploymentData;
-
+    public static final String EXTRA_MESSAGE = "com.desertstar.noropefisher.MESSAGE";
     SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //Getting setting for saved preferences
+        //Getting settings for saved preferences
         settings = getSharedPreferences("com.desertstar.noropefisher", Context.MODE_PRIVATE);
 
         //Calling super class' constructor
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         //List View with the table
         listView = findViewById(R.id.database_list_view);
 
-        //List with the different HashMap (1st-ID, 2nd-Serial# and 3rd-Distance)
+        //List with the different HashMaps (1st-ID, 2nd-Serial# and 3rd-Distance)
         list2=new ArrayList<>();
 
         //Custom Adapter with list2 as parameter
@@ -200,7 +200,12 @@ public class MainActivity extends AppCompatActivity {
                             }).setNeutralButton("Map", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    startDirections(la,lo);
+                                    //startDirections(la,lo);
+                                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                                    //EditText editText = (EditText) findViewById(R.id.editText);
+                                    //String message = editText.getText().toString();
+                                    intent.putExtra(EXTRA_MESSAGE, "algo");
+                                    startActivity(intent);
 
                                 }
                             }).setOnDismissListener(new DialogInterface.OnDismissListener() {

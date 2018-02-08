@@ -7,6 +7,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -28,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -44,6 +46,8 @@ public class DeployActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deploy);
+
+        //Log.d("QUEPASA", String.valueOf(doesContainGsfPackage(this)));
 
         settings = getSharedPreferences("com.desertstar.noropefisher", Context.MODE_PRIVATE);
         String fisherName = settings.getString("fisherName","");
@@ -162,6 +166,7 @@ public class DeployActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                             myDepo =  dataSnapshot.child("deployments").child(theFisherName+"-"+theGearNumber).getValue(Deployment.class);
+                            myDepo =  dataSnapshot.child("deployments").child(theFisherName+"-"+theGearNumber).getValue(Deployment.class);
 
                             if (myDepo == null){
                                 myDepo = user;
@@ -249,6 +254,18 @@ public class DeployActivity extends AppCompatActivity {
                 getLocation();
                 break;
         }
+    }
+
+    public static boolean doesContainGsfPackage(Context context) {
+        PackageManager pm = context.getPackageManager();
+        List<PackageInfo> list = pm.getInstalledPackages(0);
+
+        for (PackageInfo pi : list) {
+            if(pi.packageName.equals("com.google.android.gsf")) return true;  // ACCUWX.GSF_PACKAGE = com.google.android.gsf
+
+        }
+
+        return false;
     }
 
     //DELETE
