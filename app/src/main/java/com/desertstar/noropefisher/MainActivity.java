@@ -87,14 +87,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Getting setting for saved preferences
         settings = getSharedPreferences("com.desertstar.noropefisher", Context.MODE_PRIVATE);
 
-        //String elUUID = Installation.id(this);
 
         super.onCreate(savedInstanceState);
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-        setContentView(R.layout.activity_main);
 
+        //Preparing a handler to deal with Uncaught Exceptions
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+
+        //Setting content view with activity_main.xml layout
+        setContentView(R.layout.activity_main);
 
         //List View with the table
         listView = findViewById(R.id.database_list_view);
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         //Custom Adapter with list2 as parameter
         final ListViewAdapter adapter2=new ListViewAdapter(this, list2);
 
-        //TextView for AlertDialog's Title
+        //TextView for AlertDialogs' Titles
         final TextView title = new TextView(this);
         final TextView title2 = new TextView(this);
 
@@ -121,11 +124,12 @@ public class MainActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
                 {
                     //Toast.makeText(MainActivity.this, Integer.toString(pos)+" Clicked", Toast.LENGTH_SHORT).show();
+
+                    //Setting titles' properties
                     title.setText("Deployment Information:");
                     title.setGravity(Gravity.CENTER);
                     title.setTextSize(25);
                     title.setTypeface(null, Typeface.BOLD);
-
                     title.setBackgroundColor(Color.parseColor("#3E50B4"));
                     title.setTextColor(Color.WHITE);
 
@@ -133,17 +137,15 @@ public class MainActivity extends AppCompatActivity {
                     title2.setGravity(Gravity.CENTER);
                     title2.setTextSize(25);
                     title2.setTypeface(null, Typeface.BOLD);
-
                     title2.setBackgroundColor(Color.parseColor("#3E50B4"));
                     title2.setTextColor(Color.WHITE);
 
 
-                    //GETTING THE CLICKED DEPLOYMENT BY RETRIVING IT FROM THE GLOBAL ADAPTER SPECIFYING ITS LOCATION IN THE LISTVIEW WITH 'position' VAR.
+                    //GETTING THE CLICKED DEPLOYMENT BY RETRIEVING IT FROM THE GLOBAL ADAPTER SPECIFYING ITS LOCATION IN THE LISTVIEW WITH 'position' VAR.
                     final Object theDeployment = adapterGlobal.getItem(position);
                     HashMap<String,String> a = (HashMap<String,String>) theDeployment;
                     fisherName = a.get("First");
                     gearN = a.get("Second");
-
 
                     //GETTING REFERENCE TO FISHERMAN SPECIFIC DEPLOYMENT
                     dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+gearN);
@@ -171,12 +173,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     //START OF MAIN DIALOG
+                    //Dialog with CANCEL , RELEASE and DETAILS (inside another dialog with MAP, CANCEL and RELEASE buttons) buttons
                     AlertDialog dialog5 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title2).setMessage(""+
                             "Gear  #" + gearN + "\n" +
                             "from fisher "+fisherName +"\n" +
                             "\n\nRelease Deployment?"
                     ).setPositiveButton("Details", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            //Dialog with MAP, CANCEL and RELEASE buttons
                             AlertDialog dialog78 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title).setMessage("" + //.setTitle("Deployment Information: \n")
                                     "Fisher: "+fisherName +"\n" +
                                     "Gear Number: " + g + "\n" +
@@ -233,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                 }//END OF OnItemClick() METHOD
             });
         }catch (Exception e){
-            Log.d("e", "Quiiiii");
+            Log.d("error", e.getCause().toString());
         }//END OF new OnItemClickListener() EVENT LISTENER
 
         //GETTING REFERENCE TO FIREBASE DATABASE WITH ALL THE DEPLOYMENTS.
@@ -348,31 +352,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Code to execute asynchronous tasks in the background.
-//    private class AsyncTaskEx extends AsyncTask<Void, Void, Void> {
-//        /** The system calls this to perform work in a worker thread and
-//         * delivers it the parameters given to AsyncTask.execute() */
-//        @Override
-//        protected Void doInBackground(Void... arg0) {
-//            //StartTimer();//call your method here it will run in background
-//            return null;
-//        }
-//
-//        /** The system calls this to perform work in the UI thread and delivers
-//         * the result from doInBackground() */
-//        @Override
-//        protected void onPostExecute(Void result) {
-//            //Write some code you want to execute on UI after doInBackground() completes
-//            return ;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            //Write some code you want to execute on UI before doInBackground() starts
-//            return ;
-//        }
-//    }
-
     public void poblateListView(DataSnapshot dataSnapshot, int addedChangedRemoved){
         Deployment d = dataSnapshot.getValue(Deployment.class);
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -446,22 +425,6 @@ public class MainActivity extends AppCompatActivity {
             adapter3.notifyDataSetChanged();
         }
     }
-//NOTES:
-    //    //trying to dynamically refresh ListView. Not got it yet.
-//    public void refreshListView(View view){
-//        //https://stackoverflow.com/questions/5320358/update-listview-dynamically-with-adapter
-//        adapterGlobal=new ListViewAdapter(this, list2);
-//        listView.setAdapter(adapterGlobal);  //CHEEEEEEEEEEECKKK
-//        adapterGlobal.notifyDataSetChanged();
-//    }
-
-
-/*
-https://stackoverflow.com/questions/10733682/make-a-specific-code-run-in-background
-http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#facebook-looks-for-talent-and-cultural-fit-3
-    // Write this class inside your Activity and call where you want execute your method
-    new AsyncTaskEx().execute();
- */
 
     public void setDialog(AlertDialog dialog78, int messageSize, int button1Size,int button2Size,int button3Size ){
 
