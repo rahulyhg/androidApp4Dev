@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
                 {
-
                     //Toast.makeText(MainActivity.this, Integer.toString(pos)+" Clicked", Toast.LENGTH_SHORT).show();
                     title.setText("Deployment Information:");
                     title.setGravity(Gravity.CENTER);
@@ -163,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
                                 da = clickedDeploymentData.getDeploymentDate().toString();
                                 ex = String.valueOf(clickedDeploymentData.getExpirationTime());
                                 vi = String.valueOf(clickedDeploymentData.getVisibilityRange());
-
                             }
                         }
                         @Override
@@ -189,53 +187,7 @@ public class MainActivity extends AppCompatActivity {
                                     "Visibility: "+ vi+" NM"
                             ).setPositiveButton("Release", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    release();
-//                                    final String phoneUUID = getPhoneUuid();
-//
-//                                    dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
-//
-//                                    ValueEventListener eventListener = new ValueEventListener() {
-//                                        @Override
-//                                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                                            Object algo = dataSnapshot.getValue();
-//                                            String s = (String)algo;
-//
-//                                            if(s != null && !s.equals(phoneUUID) ) {
-//                                                AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                                    public void onClick(DialogInterface dialog, int id) {
-//                                                    }
-//                                                }).show();
-//                                                setDialog(dialog45,25,0,0,0);
-////                                                TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
-////                                                textView.setTextSize(25);
-//                                            }else{
-//                                                FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
-//                                                AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
-//                                                    public void onClick(DialogInterface dialog, int id) {
-//                                                        startDirections(la,lo);
-//
-//                                                    }
-//                                                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                                                    @Override
-//                                                    public void onDismiss(DialogInterface dialogInterface) {
-//                                                        //finish();
-//                                                    }
-//                                                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-//                                                    @Override
-//                                                    public void onClick(DialogInterface dialogInterface, int i) {
-//                                                        //finish();
-//                                                    }
-//                                                }).show();
-//                                                setDialog(dialog2,25,25,25,0);
-//
-//                                            }
-//                                        }
-//
-//                                        @Override
-//                                        public void onCancelled(DatabaseError databaseError) {}
-//                                    };
-//                                    dref.addListenerForSingleValueEvent(eventListener);
-//                                    //finish();
+                                    releaseDeployment();
                                 }
                             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 @Override
@@ -257,56 +209,10 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }).show();
                             setDialog(dialog78,25,20,20,20);
-
                         }
                     }).setNegativeButton("Release", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            release();
-//                            final String phoneUUID = getPhoneUuid();
-//                            dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
-//
-//
-//                            ValueEventListener eventListener = new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(DataSnapshot dataSnapshot) {
-//                                    Object algo = dataSnapshot.getValue();
-//                                    String s = (String)algo;
-//
-//                                    if(s !=null && !s.equals(phoneUUID) ) {
-//                                        AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                            public void onClick(DialogInterface dialog, int id) {
-//                                            }
-//                                        }).show();
-//                                        setDialog(dialog45,25,0,0,0);
-////
-//                                    }else{
-//                                        FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
-//                                        AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
-//                                            public void onClick(DialogInterface dialog, int id) {
-//                                                startDirections(la,lo);
-//
-//                                            }
-//                                        }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                                            @Override
-//                                            public void onDismiss(DialogInterface dialogInterface) {
-//                                                //finish();
-//                                            }
-//                                        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                                //finish();
-//                                            }
-//                                        }).show();
-//                                        setDialog(dialog2,25,20,20,0);
-//
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(DatabaseError databaseError) {}
-//                            };
-//                            dref.addListenerForSingleValueEvent(eventListener);
-
+                            releaseDeployment();
                         }
                     }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -328,10 +234,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }catch (Exception e){
             Log.d("e", "Quiiiii");
-        }
-        //END OF new OnItemClickListener() EVENT LISTENER
-
-
+        }//END OF new OnItemClickListener() EVENT LISTENER
 
         //GETTING REFERENCE TO FIREBASE DATABASE WITH ALL THE DEPLOYMENTS.
         dref = FirebaseDatabase.getInstance().getReference("deployments");
@@ -377,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     public static Date addDays(Date date, int days) {
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(date);
@@ -481,7 +385,6 @@ public class MainActivity extends AppCompatActivity {
             daysAddedDate = addDays(d.getDeploymentDate(),d.getExpirationTime());
         }
 
-
         //IF dayDif is 1 the trap has NOT expired yet. Meaning today's date (the argument) is less than the daysAddedDate.
         int dayDif = daysAddedDate.compareTo(new Date());
         boolean isExpired = dayDif <= 0;
@@ -508,7 +411,6 @@ public class MainActivity extends AppCompatActivity {
             HashMap<String,String> temp=new HashMap<>();
             temp.put(FIRST_COLUMN, elID);
             temp.put(SECOND_COLUMN, gearNumber);
-
 
             String res2 =df2.format(dist*0.53996);
             temp.put(THIRD_COLUMN, res2 );
@@ -594,7 +496,8 @@ http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#
             throw new RuntimeException(e);
         }
     }
-    public void release(){
+
+    public void releaseDeployment(){
         final String phoneUUID = getPhoneUuid();
 
         dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
@@ -610,15 +513,12 @@ http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#
                         public void onClick(DialogInterface dialog, int id) {
                         }
                     }).show();
-                    setDialog(dialog45,25,25,0,0);
-//                                                TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
-//                                                textView.setTextSize(25);
+                    setDialog(dialog45,25,20,0,0);
                 }else{
                     FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
                     AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             startDirections(la,lo);
-
                         }
                     }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -632,10 +532,8 @@ http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#
                         }
                     }).show();
                     setDialog(dialog2,25,25,25,0);
-
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         };
