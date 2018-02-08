@@ -189,52 +189,53 @@ public class MainActivity extends AppCompatActivity {
                                     "Visibility: "+ vi+" NM"
                             ).setPositiveButton("Release", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    final String phoneUUID = getPhoneUuid();
-
-                                    dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
-
-                                    ValueEventListener eventListener = new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            Object algo = dataSnapshot.getValue();
-                                            String s = (String)algo;
-
-                                            if(s != null && !s.equals(phoneUUID) ) {
-                                                AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                    }
-                                                }).show();
-                                                setDialog(dialog45,25,0,0,0);
-//                                                TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
-//                                                textView.setTextSize(25);
-                                            }else{
-                                                FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
-                                                AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        startDirections(la,lo);
-
-                                                    }
-                                                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                                    @Override
-                                                    public void onDismiss(DialogInterface dialogInterface) {
-                                                        //finish();
-                                                    }
-                                                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                                        //finish();
-                                                    }
-                                                }).show();
-                                                setDialog(dialog2,25,25,25,0);
-
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {}
-                                    };
-                                    dref.addListenerForSingleValueEvent(eventListener);
-                                    //finish();
+                                    release();
+//                                    final String phoneUUID = getPhoneUuid();
+//
+//                                    dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
+//
+//                                    ValueEventListener eventListener = new ValueEventListener() {
+//                                        @Override
+//                                        public void onDataChange(DataSnapshot dataSnapshot) {
+//                                            Object algo = dataSnapshot.getValue();
+//                                            String s = (String)algo;
+//
+//                                            if(s != null && !s.equals(phoneUUID) ) {
+//                                                AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                                    public void onClick(DialogInterface dialog, int id) {
+//                                                    }
+//                                                }).show();
+//                                                setDialog(dialog45,25,0,0,0);
+////                                                TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
+////                                                textView.setTextSize(25);
+//                                            }else{
+//                                                FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
+//                                                AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
+//                                                    public void onClick(DialogInterface dialog, int id) {
+//                                                        startDirections(la,lo);
+//
+//                                                    }
+//                                                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                                                    @Override
+//                                                    public void onDismiss(DialogInterface dialogInterface) {
+//                                                        //finish();
+//                                                    }
+//                                                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(DialogInterface dialogInterface, int i) {
+//                                                        //finish();
+//                                                    }
+//                                                }).show();
+//                                                setDialog(dialog2,25,25,25,0);
+//
+//                                            }
+//                                        }
+//
+//                                        @Override
+//                                        public void onCancelled(DatabaseError databaseError) {}
+//                                    };
+//                                    dref.addListenerForSingleValueEvent(eventListener);
+//                                    //finish();
                                 }
                             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 @Override
@@ -260,56 +261,51 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }).setNegativeButton("Release", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-//                            DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
-
-                            final String phoneUUID = getPhoneUuid();
-
-//                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-
-                            dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
-
-
-                            ValueEventListener eventListener = new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Object algo = dataSnapshot.getValue();
-                                    String s = (String)algo;
-
-                                    if(s !=null && !s.equals(phoneUUID) ) {
-                                        AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                            }
-                                        }).show();
-                                        setDialog(dialog45,25,0,0,0);
-//                                        TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
-//                                        textView.setTextSize(25);
-                                    }else{
-                                        FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
-                                        AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                startDirections(la,lo);
-
-                                            }
-                                        }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                            @Override
-                                            public void onDismiss(DialogInterface dialogInterface) {
-                                                //finish();
-                                            }
-                                        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                //finish();
-                                            }
-                                        }).show();
-                                        setDialog(dialog2,25,20,20,0);
-
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {}
-                            };
-                            dref.addListenerForSingleValueEvent(eventListener);
+                            release();
+//                            final String phoneUUID = getPhoneUuid();
+//                            dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
+//
+//
+//                            ValueEventListener eventListener = new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(DataSnapshot dataSnapshot) {
+//                                    Object algo = dataSnapshot.getValue();
+//                                    String s = (String)algo;
+//
+//                                    if(s !=null && !s.equals(phoneUUID) ) {
+//                                        AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                            public void onClick(DialogInterface dialog, int id) {
+//                                            }
+//                                        }).show();
+//                                        setDialog(dialog45,25,0,0,0);
+////
+//                                    }else{
+//                                        FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
+//                                        AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
+//                                            public void onClick(DialogInterface dialog, int id) {
+//                                                startDirections(la,lo);
+//
+//                                            }
+//                                        }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                                            @Override
+//                                            public void onDismiss(DialogInterface dialogInterface) {
+//                                                //finish();
+//                                            }
+//                                        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                                //finish();
+//                                            }
+//                                        }).show();
+//                                        setDialog(dialog2,25,20,20,0);
+//
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(DatabaseError databaseError) {}
+//                            };
+//                            dref.addListenerForSingleValueEvent(eventListener);
 
                         }
                     }).setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -366,7 +362,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     public void sortList(HashMap<String,String>[] listToSort){
@@ -390,7 +385,6 @@ public class MainActivity extends AppCompatActivity {
         return cal.getTime();
     }
 
-
     public void startDirections(String la, String lo){
         Intent intent = new Intent( Intent.ACTION_VIEW,
                 Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
@@ -398,8 +392,6 @@ public class MainActivity extends AppCompatActivity {
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
     }
-
-
 
     //Method for START DEPLOYMENT button. It leads to DeployActivity
     public void goToDeployment(View view) {
@@ -492,16 +484,7 @@ public class MainActivity extends AppCompatActivity {
 
         //IF dayDif is 1 the trap has NOT expired yet. Meaning today's date (the argument) is less than the daysAddedDate.
         int dayDif = daysAddedDate.compareTo(new Date());
-        boolean isExpired;
-        if(dayDif <0){
-            isExpired=true;
-        }else if (dayDif ==0){
-            isExpired=true;
-        }else{
-            isExpired=false;
-        }
-
-
+        boolean isExpired = dayDif <= 0;
         DecimalFormat df2 = new DecimalFormat(".##");
         DistanceCalculator calculator = new DistanceCalculator();
         double dist = 0;//OJO
@@ -611,6 +594,52 @@ http://www.businessinsider.com/how-facebook-finds-exceptional-employees-2016-2/#
             throw new RuntimeException(e);
         }
     }
+    public void release(){
+        final String phoneUUID = getPhoneUuid();
+
+        dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
+
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Object algo = dataSnapshot.getValue();
+                String s = (String)algo;
+
+                if(s != null && !s.equals(phoneUUID) ) {
+                    AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    }).show();
+                    setDialog(dialog45,25,25,0,0);
+//                                                TextView textView = (TextView) dialog45.findViewById(android.R.id.message);
+//                                                textView.setTextSize(25);
+                }else{
+                    FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
+                    AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            startDirections(la,lo);
+
+                        }
+                    }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                            //finish();
+                        }
+                    }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //finish();
+                        }
+                    }).show();
+                    setDialog(dialog2,25,25,25,0);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        dref.addListenerForSingleValueEvent(eventListener);
+        //finish();
+    }
 }
-
-
