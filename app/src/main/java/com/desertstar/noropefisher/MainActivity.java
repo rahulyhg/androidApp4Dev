@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         //Getting setting for saved preferences
         settings = getSharedPreferences("com.desertstar.noropefisher", Context.MODE_PRIVATE);
 
-
+        //Calling super class' constructor
         super.onCreate(savedInstanceState);
 
         //Preparing a handler to deal with Uncaught Exceptions
@@ -123,8 +123,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
                 {
-                    //Toast.makeText(MainActivity.this, Integer.toString(pos)+" Clicked", Toast.LENGTH_SHORT).show();
-
                     //Setting titles' properties
                     title.setText("Deployment Information:");
                     title.setGravity(Gravity.CENTER);
@@ -172,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.w("sdf", "Failed to read value.", error.toException());
                         }
                     });
+
                     //START OF MAIN DIALOG
                     //Dialog with CANCEL , RELEASE and DETAILS (inside another dialog with MAP, CANCEL and RELEASE buttons) buttons
                     AlertDialog dialog5 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title2).setMessage(""+
@@ -246,17 +245,17 @@ public class MainActivity extends AppCompatActivity {
         dref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-                poblateListView(dataSnapshot, 1);
+                fillListView(dataSnapshot, 1);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                poblateListView(dataSnapshot,2);
+                fillListView(dataSnapshot,2);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                poblateListView(dataSnapshot,3);
+                fillListView(dataSnapshot,3);
             }
 
             @Override
@@ -269,8 +268,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }
+    }//END OF onCreate
 
+    //Method to sort an array of HashMaps with String,String Key-Value relationship
     public void sortList(HashMap<String,String>[] listToSort){
         Arrays.sort(listToSort, new Comparator<HashMap<String,String>>() {
             public int compare(HashMap<String,String> o1, HashMap<String,String> o2) {
@@ -285,6 +285,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Method to add days to a given Date
     public static Date addDays(Date date, int days) {
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(date);
@@ -293,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
         return cal.getTime();
     }
 
+    //Method to launch google maps with a given Latitude and Longitude
     public void startDirections(String la, String lo){
         Intent intent = new Intent( Intent.ACTION_VIEW,
                 Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
@@ -310,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //Get phone's geolocation
+    //Method to get phone's geolocation
     double[] getLocation(){
         double result[] = {0,0};
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -352,7 +354,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void poblateListView(DataSnapshot dataSnapshot, int addedChangedRemoved){
+    //Method to fill a list view with a given DataSnapshot and case (added, changed or removed)
+    public void fillListView(DataSnapshot dataSnapshot, int addedChangedRemoved){
         Deployment d = dataSnapshot.getValue(Deployment.class);
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         double location [] = getLocation();
@@ -426,6 +429,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Method to set up a given dialog with a given size for message and buttons 1,2 and 3 if exist
     public void setDialog(AlertDialog dialog78, int messageSize, int button1Size,int button2Size,int button3Size ){
 
         TextView textView =  dialog78.findViewById(android.R.id.message);
@@ -448,6 +452,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Method to get phone's UUID
     public String getPhoneUuid(){
         File installation;
         String phoneUUID;
@@ -460,6 +465,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Method to release a deployment
     public void releaseDeployment(){
         final String phoneUUID = getPhoneUuid();
 
