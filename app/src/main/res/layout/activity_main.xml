@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context="com.desertstar.noropefisher.MainActivity">
 
     <EditText
@@ -48,6 +49,17 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/buttonDeploy"
         android:layout_toEndOf="@+id/etLocationLat"
-        android:layout_toRightOf="@+id/etLocationLat" />
+        android:layout_toRightOf="@+id/etLocationLat" >
 
+    </ListView>
+
+    <RelativeLayout
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/buttonDeploy"
+        android:layout_toEndOf="@+id/etLocationLat"
+        android:layout_toRightOf="@+id/etLocationLat">
+
+    </RelativeLayout>
 </RelativeLayout>

@@ -2,7 +2,9 @@ package com.desertstar.noropefisher;
 /**
  * Created by Iker Redondo on 1/17/2018.
  */
+
 import android.Manifest;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,6 +34,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,11 +65,11 @@ import static com.desertstar.noropefisher.Constants.SECOND_COLUMN;
 import static com.desertstar.noropefisher.Constants.THIRD_COLUMN;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     //Attributes
     static final int REQUEST_LOCATION = 1;
-    static  final int MAX_DISTANCE_RANGE =700003 ;
+    static final int MAX_DISTANCE_RANGE = 700003;
     LocationManager locationManager;
 
 
@@ -70,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     //Android Layout for multicolumn item list
     private ListView listView;
 
-
+    private GoogleMap mMap;
     private ArrayList<HashMap<String, String>> list2;
     ListViewAdapter adapterGlobal;
     String fisherName = "Fisher1";
@@ -79,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
     String la = "32.515";
     String lo = "121.1516";
     String da = "";
-    String  ex = "1";
-    String vi ="2";
+    String ex = "1";
+    String vi = "2";
     Deployment clickedDeploymentData;
     public static final String EXTRA_MESSAGE = "com.desertstar.noropefisher.MESSAGE";
     SharedPreferences settings;
@@ -94,19 +104,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //Preparing a handler to deal with Uncaught Exceptions
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         //Setting content view with activity_main.xml layout
         setContentView(R.layout.activity_main);
+
+//        MapFragment mapFragment = (MapFragment) getFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
 
         //List View with the table
         listView = findViewById(R.id.database_list_view);
 
         //List with the different HashMaps (1st-ID, 2nd-Serial# and 3rd-Distance)
-        list2=new ArrayList<>();
+        list2 = new ArrayList<>();
 
         //Custom Adapter with list2 as parameter
-        final ListViewAdapter adapter2=new ListViewAdapter(this, list2);
+        final ListViewAdapter adapter2 = new ListViewAdapter(this, list2);
 
         //TextView for AlertDialogs' Titles
         final TextView title = new TextView(this);
@@ -118,11 +132,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             //BEGINNING OF ONCLICK EVENT LISTENER
             //Listener for the ListView (To Pop-Up the Alert Dialog with the clicked Deployment's info)
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
-                {
+                public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                     //Setting titles' properties
                     title.setText("Deployment Information:");
                     title.setGravity(Gravity.CENTER);
@@ -141,12 +153,12 @@ public class MainActivity extends AppCompatActivity {
 
                     //GETTING THE CLICKED DEPLOYMENT BY RETRIEVING IT FROM THE GLOBAL ADAPTER SPECIFYING ITS LOCATION IN THE LISTVIEW WITH 'position' VAR.
                     final Object theDeployment = adapterGlobal.getItem(position);
-                    HashMap<String,String> a = (HashMap<String,String>) theDeployment;
+                    HashMap<String, String> a = (HashMap<String, String>) theDeployment;
                     fisherName = a.get("First");
                     gearN = a.get("Second");
 
                     //GETTING REFERENCE TO FISHERMAN SPECIFIC DEPLOYMENT
-                    dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+gearN);
+                    dref = FirebaseDatabase.getInstance().getReference("deployments/" + fisherName + "-" + gearN);
                     // Read from the database
                     dref.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -157,13 +169,14 @@ public class MainActivity extends AppCompatActivity {
 
                             if (clickedDeploymentData != null) {
                                 g = clickedDeploymentData.getGearNumber();
-                                la = String.valueOf(clickedDeploymentData.getLatitude()) ;
+                                la = String.valueOf(clickedDeploymentData.getLatitude());
                                 lo = String.valueOf(clickedDeploymentData.getLongitude());
                                 da = clickedDeploymentData.getDeploymentDate().toString();
                                 ex = String.valueOf(clickedDeploymentData.getExpirationTime());
                                 vi = String.valueOf(clickedDeploymentData.getVisibilityRange());
                             }
                         }
+
                         @Override
                         public void onCancelled(DatabaseError error) {
                             // Failed to read value
@@ -173,21 +186,21 @@ public class MainActivity extends AppCompatActivity {
 
                     //START OF MAIN DIALOG
                     //Dialog with CANCEL , RELEASE and DETAILS (inside another dialog with MAP, CANCEL and RELEASE buttons) buttons
-                    AlertDialog dialog5 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title2).setMessage(""+
+                    AlertDialog dialog5 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title2).setMessage("" +
                             "Gear  #" + gearN + "\n" +
-                            "from fisher "+fisherName +"\n" +
+                            "from fisher " + fisherName + "\n" +
                             "\n\nRelease Deployment?"
                     ).setPositiveButton("Details", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             //Dialog with MAP, CANCEL and RELEASE buttons
                             AlertDialog dialog78 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title).setMessage("" + //.setTitle("Deployment Information: \n")
-                                    "Fisher: "+fisherName +"\n" +
+                                    "Fisher: " + fisherName + "\n" +
                                     "Gear Number: " + g + "\n" +
-                                    "Latitude: "+ la  +" \n" +
-                                    "Longitude: "+ lo  +"\n" +
-                                    "Deployed on:\n"+ da  +" \n" +
-                                    "Expires in: "+ ex  +" days \n" +
-                                    "Visibility: "+ vi+" NM"
+                                    "Latitude: " + la + " \n" +
+                                    "Longitude: " + lo + "\n" +
+                                    "Deployed on:\n" + da + " \n" +
+                                    "Expires in: " + ex + " days \n" +
+                                    "Visibility: " + vi + " NM"
                             ).setPositiveButton("Release", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     releaseDeployment();
@@ -201,22 +214,38 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     //startDirections(la,lo);
-                                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                                    //EditText editText = (EditText) findViewById(R.id.editText);
-                                    //String message = editText.getText().toString();
-                                    intent.putExtra(EXTRA_MESSAGE, "algo");
-                                    startActivity(intent);
+//                                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+//                                    //EditText editText = (EditText) findViewById(R.id.editText);
+//                                    //String message = editText.getText().toString();
+//                                    intent.putExtra(EXTRA_MESSAGE, "algo");
+//                                    startActivity(intent);
+                                    GoogleMapOptions options = new GoogleMapOptions();
+                                    options.mapType(GoogleMap.MAP_TYPE_SATELLITE)
+                                            .compassEnabled(false)
+                                            .rotateGesturesEnabled(false)
+                                            .tiltGesturesEnabled(false);
+                                    MapFragment mMapFragment = MapFragment.newInstance(options);
+                                    FragmentTransaction fragmentTransaction =
+                                            getFragmentManager().beginTransaction();
+                                    fragmentTransaction.add(R.id.map, mMapFragment);
+                                    fragmentTransaction.commit();
 
+//                                    MapFragment mapFragment = (MapFragment) getFragmentManager()
+//                                            .findFragmentById(R.id.map);
+                                    mMapFragment.getMapAsync(MainActivity.this);
+//                                    mMap.addMarker(new MarkerOptions()
+//                                            .position(new LatLng(0, 0))
+//                                            .title("Marker"));
                                 }
                             }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialogInterface) {
                                     //To avoid ERROR: The specified child already has a parent. You must call removeView() on the child's parent first.
-                                    if(title.getParent()!=null)
-                                        ((ViewGroup)title.getParent()).removeView(title);
+                                    if (title.getParent() != null)
+                                        ((ViewGroup) title.getParent()).removeView(title);
                                 }
                             }).show();
-                            setDialog(dialog78,25,20,20,20);
+                            setDialog(dialog78, 25, 20, 20, 20);
                         }
                     }).setNegativeButton("Release", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -226,8 +255,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onDismiss(DialogInterface dialogInterface) {
                             //To avoid ERROR: The specified child already has a parent. You must call removeView() on the child's parent first.
-                            if(title2.getParent()!=null)
-                                ((ViewGroup)title2.getParent()).removeView(title2);
+                            if (title2.getParent() != null)
+                                ((ViewGroup) title2.getParent()).removeView(title2);
                         }
                     }).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
@@ -235,12 +264,12 @@ public class MainActivity extends AppCompatActivity {
                             //nothing
                         }
                     }).show();
-                    setDialog(dialog5,30,18,18,18);
+                    setDialog(dialog5, 30, 18, 18, 18);
                     //END OF MAIN DIALOG
 
                 }//END OF OnItemClick() METHOD
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d("error", e.getCause().toString());
         }//END OF new OnItemClickListener() EVENT LISTENER
 
@@ -255,12 +284,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                fillListView(dataSnapshot,2);
+                fillListView(dataSnapshot, 2);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                fillListView(dataSnapshot,3);
+                fillListView(dataSnapshot, 3);
             }
 
             @Override
@@ -276,13 +305,13 @@ public class MainActivity extends AppCompatActivity {
     }//END OF onCreate
 
     //Method to sort an array of HashMaps with String,String Key-Value relationship
-    public void sortList(HashMap<String,String>[] listToSort){
-        Arrays.sort(listToSort, new Comparator<HashMap<String,String>>() {
-            public int compare(HashMap<String,String> o1, HashMap<String,String> o2) {
+    public void sortList(HashMap<String, String>[] listToSort) {
+        Arrays.sort(listToSort, new Comparator<HashMap<String, String>>() {
+            public int compare(HashMap<String, String> o1, HashMap<String, String> o2) {
                 String t1 = o1.get("Third");
                 String t2 = o2.get("Third");
-                String s1 =t1.substring(0, t1.length());// - 3);
-                String s2 =t2.substring(0, t2.length());// - 3);
+                String s1 = t1.substring(0, t1.length());// - 3);
+                String s2 = t2.substring(0, t2.length());// - 3);
                 double n1 = Double.parseDouble(s1);
                 double n2 = Double.parseDouble(s2);
                 return (n1 > n2) ? 1 : -1;
@@ -300,10 +329,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Method to launch google maps with a given Latitude and Longitude
-    public void startDirections(String la, String lo){
-        Intent intent = new Intent( Intent.ACTION_VIEW,
-                Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving&dir_action=navigate&travelmode"));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK&Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+    public void startDirections(String la, String lo) {
+        Intent intent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://www.google.com/maps/dir/?api=1&destination=" + la + "," + lo + "&travelmode=driving&dir_action=navigate&travelmode"));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK & Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
     }
@@ -318,9 +347,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Method to get phone's geolocation
-    double[] getLocation(){
-        double result[] = {0,0};
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+    double[] getLocation() {
+        double result[] = {0, 0};
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -330,23 +359,24 @@ public class MainActivity extends AppCompatActivity {
 
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
-            if (location != null){
+            if (location != null) {
                 double latti = location.getLatitude();
                 double longi = location.getLongitude();
 
                 result[0] = latti;
-                result [1]= longi;
+                result[1] = longi;
 
-                ((EditText)findViewById(R.id.etLocationLat)).setText("Latitude: " + latti);
-                ((EditText)findViewById(R.id.etLocationLong)).setText("Longitude: " + longi);
+                ((EditText) findViewById(R.id.etLocationLat)).setText("Latitude: " + latti);
+                ((EditText) findViewById(R.id.etLocationLong)).setText("Longitude: " + longi);
             } else {
-                ((EditText)findViewById(R.id.etLocationLat)).setText("Unable to find correct location.");
-                ((EditText)findViewById(R.id.etLocationLong)).setText("Unable to find correct location. ");
+                ((EditText) findViewById(R.id.etLocationLat)).setText("Unable to find correct location.");
+                ((EditText) findViewById(R.id.etLocationLong)).setText("Unable to find correct location. ");
             }
 
         }
         return result;
     }
+
     //Internal method for getting location.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -360,16 +390,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Method to fill a list view with a given DataSnapshot and case (added, changed or removed)
-    public void fillListView(DataSnapshot dataSnapshot, int addedChangedRemoved){
+    public void fillListView(DataSnapshot dataSnapshot, int addedChangedRemoved) {
         Deployment d = dataSnapshot.getValue(Deployment.class);
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        double location [] = getLocation();
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        double location[] = getLocation();
         double lat2 = location[0];
-        double long2 =  location[1];
-        Date daysAddedDate =new Date();  //OJO
+        double long2 = location[1];
+        Date daysAddedDate = new Date();  //OJO
 
-        if(d != null){
-            daysAddedDate = addDays(d.getDeploymentDate(),d.getExpirationTime());
+        if (d != null) {
+            daysAddedDate = addDays(d.getDeploymentDate(), d.getExpirationTime());
         }
 
         //IF dayDif is 1 the trap has NOT expired yet. Meaning today's date (the argument) is less than the daysAddedDate.
@@ -379,12 +409,12 @@ public class MainActivity extends AppCompatActivity {
         DistanceCalculator calculator = new DistanceCalculator();
         double dist = 0;//OJO
         String fisherUUID = "";//OJO
-        double visibilityRange=0.0;
+        double visibilityRange = 0.0;
         String elID = "";
         String gearNumber = "";
 
-        if(d != null){
-            dist = calculator.distance(d.getLatitude(),lat2,d.getLongitude(),long2,0,0);
+        if (d != null) {
+            dist = calculator.distance(d.getLatitude(), lat2, d.getLongitude(), long2, 0, 0);
             fisherUUID = d.getUuid();
             visibilityRange = d.getVisibilityRange();
             elID = d.getID();
@@ -393,34 +423,34 @@ public class MainActivity extends AppCompatActivity {
 
         String phoneUUID = getPhoneUuid();
 
-        dist = dist/1000;
-        if(dist < MAX_DISTANCE_RANGE  && (  (fisherUUID.equals(phoneUUID) ) || ((dist *0.53996 <= visibilityRange)&&!isExpired) )){
-            HashMap<String,String> temp=new HashMap<>();
+        dist = dist / 1000;
+        if (dist < MAX_DISTANCE_RANGE && ((fisherUUID.equals(phoneUUID)) || ((dist * 0.53996 <= visibilityRange) && !isExpired))) {
+            HashMap<String, String> temp = new HashMap<>();
             temp.put(FIRST_COLUMN, elID);
             temp.put(SECOND_COLUMN, gearNumber);
 
-            String res2 =df2.format(dist*0.53996);
-            temp.put(THIRD_COLUMN, res2 );
+            String res2 = df2.format(dist * 0.53996);
+            temp.put(THIRD_COLUMN, res2);
 
-            if (addedChangedRemoved == 2){
-                for(HashMap<String, String> a : list2){
-                    if(a.get("Second").equals(gearNumber)){
+            if (addedChangedRemoved == 2) {
+                for (HashMap<String, String> a : list2) {
+                    if (a.get("Second").equals(gearNumber)) {
                         list2.remove(a);
                         break;
                     }
                 }
                 list2.add(temp);
-            }else if (addedChangedRemoved == 3){
+            } else if (addedChangedRemoved == 3) {
                 list2.remove(temp);
-            }else if(addedChangedRemoved == 1){
+            } else if (addedChangedRemoved == 1) {
                 list2.add(temp);
             }
 
-            HashMap<String,String>[] harr =list2.toArray(new HashMap[list2.size()]);
+            HashMap<String, String>[] harr = list2.toArray(new HashMap[list2.size()]);
             sortList(harr);
             ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<>();
 
-            for(int i =0;i<list2.size();i++){
+            for (int i = 0; i < list2.size(); i++) {
                 orderedlist2.add(harr[i]);
             }
 
@@ -435,64 +465,64 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Method to set up a given dialog with a given size for message and buttons 1,2 and 3 if exist
-    public void setDialog(AlertDialog dialog78, int messageSize, int button1Size,int button2Size,int button3Size ){
+    public void setDialog(AlertDialog dialog78, int messageSize, int button1Size, int button2Size, int button3Size) {
 
-        TextView textView =  dialog78.findViewById(android.R.id.message);
-        if(textView != null){
+        TextView textView = dialog78.findViewById(android.R.id.message);
+        if (textView != null) {
             textView.setTextSize(messageSize);
         }
 
-        TextView textViewButton =  dialog78.findViewById(android.R.id.button1);
-        if(textViewButton != null){
+        TextView textViewButton = dialog78.findViewById(android.R.id.button1);
+        if (textViewButton != null) {
             textViewButton.setTextSize(button1Size);
         }
-        TextView textViewButton2 =  dialog78.findViewById(android.R.id.button2);
-        if(textViewButton2 != null){
+        TextView textViewButton2 = dialog78.findViewById(android.R.id.button2);
+        if (textViewButton2 != null) {
             textViewButton2.setTextSize(button2Size);
         }
 
-        TextView textViewButton3 =  dialog78.findViewById(android.R.id.button3);
-        if(textViewButton3 != null){
+        TextView textViewButton3 = dialog78.findViewById(android.R.id.button3);
+        if (textViewButton3 != null) {
             textViewButton3.setTextSize(button3Size);
         }
     }
 
     //Method to get phone's UUID
-    public String getPhoneUuid(){
+    public String getPhoneUuid() {
         File installation;
         String phoneUUID;
         try {
             installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
-            phoneUUID =  Installation.readInstallationFile(installation);
+            phoneUUID = Installation.readInstallationFile(installation);
             return phoneUUID;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     //Method to release a deployment
-    public void releaseDeployment(){
+    public void releaseDeployment() {
         final String phoneUUID = getPhoneUuid();
 
-        dref = FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g+"/uuid");
+        dref = FirebaseDatabase.getInstance().getReference("deployments/" + fisherName + "-" + g + "/uuid");
 
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Object algo = dataSnapshot.getValue();
-                String s = (String)algo;
+                String s = (String) algo;
 
-                if(s != null && !s.equals(phoneUUID) ) {
+                if (s != null && !s.equals(phoneUUID)) {
                     AlertDialog dialog45 = new AlertDialog.Builder(MainActivity.this).setMessage("This gear is not yours").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                         }
                     }).show();
-                    setDialog(dialog45,25,20,0,0);
-                }else{
-                    FirebaseDatabase.getInstance().getReference("deployments/"+fisherName+"-"+g).removeValue();
+                    setDialog(dialog45, 25, 20, 0, 0);
+                } else {
+                    FirebaseDatabase.getInstance().getReference("deployments/" + fisherName + "-" + g).removeValue();
                     AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            startDirections(la,lo);
+                            startDirections(la, lo);
                         }
                     }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -505,13 +535,51 @@ public class MainActivity extends AppCompatActivity {
                             //finish();
                         }
                     }).show();
-                    setDialog(dialog2,25,25,25,0);
+                    setDialog(dialog2, 25, 25, 25, 0);
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+            }
         };
         dref.addListenerForSingleValueEvent(eventListener);
         //finish();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+//        // Add a marker in Sydney and move the camera
+//        LatLng sydney = new LatLng(-34, 151);
+//        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        // Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(36.871806, -122.109441);
+        LatLng sydney2 = new LatLng(36.660881, -121.783714);
+        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in MB"));
+        googleMap.addMarker(new MarkerOptions().position(sydney2).title("Marker in MB2"));
+        pointToPosition(sydney, googleMap);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+        mMap = googleMap;
+    }
+    private void pointToPosition(LatLng position,GoogleMap mGoogleMap) {
+        //Build camera position
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(position)
+                .zoom(10).build();
+        //Zoom in and animate the camera.
+        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 }
