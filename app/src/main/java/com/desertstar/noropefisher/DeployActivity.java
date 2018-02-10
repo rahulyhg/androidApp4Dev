@@ -94,6 +94,11 @@ public class DeployActivity extends AppCompatActivity {
         //popUp.show(getSupportFragmentManager(), "ok msg");
     }
 
+    /*
+    *
+    *
+    * */
+
     //It gets the geolocation and saves it in the Firebase Database.
     boolean getLocation(){
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

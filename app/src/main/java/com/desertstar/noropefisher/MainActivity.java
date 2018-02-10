@@ -39,9 +39,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -75,13 +79,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //Firebase db Reference
     private DatabaseReference dref;
+    LatLng BRISBANE;
+    String latLng = "";
+    String selectedGearToBeShownOnMap="";
 
 
     //Android Layout for multicolumn item list
     private ListView listView;
 
-    private GoogleMap mMap;
+    public GoogleMap mMap;
     private ArrayList<HashMap<String, String>> list2;
+    private ArrayList<LatLng> listOfLocations;
     ListViewAdapter adapterGlobal;
     String fisherName = "Fisher1";
     String gearN = "1";
@@ -118,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //List with the different HashMaps (1st-ID, 2nd-Serial# and 3rd-Distance)
         list2 = new ArrayList<>();
+        listOfLocations = new ArrayList<>();
 
         //Custom Adapter with list2 as parameter
         final ListViewAdapter adapter2 = new ListViewAdapter(this, list2);
@@ -233,9 +242,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                                    MapFragment mapFragment = (MapFragment) getFragmentManager()
 //                                            .findFragmentById(R.id.map);
                                     mMapFragment.getMapAsync(MainActivity.this);
-//                                    mMap.addMarker(new MarkerOptions()
-//                                            .position(new LatLng(0, 0))
-//                                            .title("Marker"));
+
+                                    if (MainActivity.this.mMap != null) {
+                                        LatLng sydney = new LatLng(37.339800, -121.879220);
+
+                                        MainActivity.this.mMap.addMarker(new MarkerOptions().position(sydney)
+                                                .title("Iker marker"));
+                                    } else {
+                                        Log.d("null", "es null");
+                                    }
+                                    selectedGearToBeShownOnMap = g;
+                                    latLng = la +", " + lo;
+                                    BRISBANE = new LatLng(Double.valueOf(la), Double.valueOf(lo));
+
                                 }
                             }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
@@ -431,6 +450,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             String res2 = df2.format(dist * 0.53996);
             temp.put(THIRD_COLUMN, res2);
+            LatLng theLocation = new LatLng(d.getLatitude(), d.getLongitude());
 
             if (addedChangedRemoved == 2) {
                 for (HashMap<String, String> a : list2) {
@@ -440,12 +460,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
                 list2.add(temp);
+                //listOfLocations
             } else if (addedChangedRemoved == 3) {
                 list2.remove(temp);
+                listOfLocations.remove(theLocation);
             } else if (addedChangedRemoved == 1) {
-                list2.add(temp);
-            }
 
+                list2.add(temp);
+                listOfLocations.add(theLocation);
+            }
             HashMap<String, String>[] harr = list2.toArray(new HashMap[list2.size()]);
             sortList(harr);
             ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<>();
@@ -549,18 +572,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
+        mMap = googleMap;
 //        // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
 //        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(36.871806, -122.109441);
-        LatLng sydney2 = new LatLng(36.660881, -121.783714);
-        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in MB"));
-        googleMap.addMarker(new MarkerOptions().position(sydney2).title("Marker in MB2"));
-        pointToPosition(sydney, googleMap);
+//        LatLng sydney = new LatLng(36.871806, -122.109441);
+//        LatLng sydney2 = new LatLng(36.660881, -121.783714);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("36.871806, -122.109441"));
+//        mMap.addMarker(new MarkerOptions().position(sydney2).title("Marker in MB2"));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -571,15 +593,47 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        googleMap.setMyLocationEnabled(true);
-        mMap = googleMap;
+        mMap.setMyLocationEnabled(true);
+
+        Marker mBrisbane;
+        mBrisbane = mMap.addMarker(new MarkerOptions()
+                .position(BRISBANE)
+                .title(selectedGearToBeShownOnMap)
+                .snippet(latLng));
+
+        for(LatLng c : listOfLocations){
+            if(!c.equals(BRISBANE))
+            mMap.addMarker(new MarkerOptions()
+                    .position(c)
+                    .title("other dep")
+                    .snippet(c.toString()));
+        }
+        pointToPosition(BRISBANE, mMap);
+        double currentLocation []= getLocation();
+        Polyline line = mMap.addPolyline(new PolylineOptions()
+                .add(new LatLng(currentLocation[0], currentLocation[1]), BRISBANE)
+                .width(5)
+                .color(Color.BLUE));
+
+
     }
-    private void pointToPosition(LatLng position,GoogleMap mGoogleMap) {
+
+    private void pointToPosition(LatLng position, GoogleMap mGoogleMap) {
         //Build camera position
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(position)
-                .zoom(10).build();
+                .zoom(15).build();
         //Zoom in and animate the camera.
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    private void addMarkersToMap() {
+        Marker mBrisbane;
+        LatLng BRISBANE = new LatLng(37.339800, -121.879220);
+        mBrisbane = mMap.addMarker(new MarkerOptions()
+                .position(BRISBANE)
+                .title("Brisbane")
+                .snippet("Population: 2,074,200"));
+
     }
 }
