@@ -157,7 +157,8 @@ public class DeployActivity extends AppCompatActivity {
                    final String elUUID;
                     try {
                         installation = new File(DeployActivity.this.getFilesDir(), "INSTALLATION");
-                        elUUID =  Installation.readInstallationFile(installation);
+//                        elUUID =  Installation.readInstallationFile(installation);
+                        elUUID = UniqueId.id(this);
                     }catch (Exception e){
                         throw new RuntimeException(e);
                     }

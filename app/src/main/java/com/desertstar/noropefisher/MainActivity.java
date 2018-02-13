@@ -510,14 +510,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /*SUPER UPDATE*/
+
+
     //Method to get phone's UUID
     public String getPhoneUuid() {
         File installation;
         String phoneUUID;
         try {
+//            Log.d("IKERdir",MainActivity.this.getFilesDir().toString());
             installation = new File(MainActivity.this.getFilesDir(), "INSTALLATION");
-            phoneUUID = Installation.readInstallationFile(installation);
+//            Log.d("Existe?", String.valueOf(installation.exists()));
+            //File mi = new File()
+//            phoneUUID = Installation.readInstallationFile(installation);
+            phoneUUID = UniqueId.id(this);
+            Log.d("phone id?", phoneUUID);
             return phoneUUID;
+//            return "";
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
