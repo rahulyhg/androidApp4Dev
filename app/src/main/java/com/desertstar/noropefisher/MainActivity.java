@@ -39,7 +39,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -67,6 +66,7 @@ import java.util.HashMap;
 import static com.desertstar.noropefisher.Constants.FIRST_COLUMN;
 import static com.desertstar.noropefisher.Constants.SECOND_COLUMN;
 import static com.desertstar.noropefisher.Constants.THIRD_COLUMN;
+
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -105,6 +105,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
+//        if(UniqueId.getID()==null){
+//            AlertDialog dialog = new AlertDialog.Builder(this).setMessage("Firs time opening app").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//
+//                }
+//            }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialogInterface) {
+//
+//                }
+//            }).show();
+//            setDialog(dialog, 25,25,0,0);
+//        }
+
         //Getting settings for saved preferences
         settings = getSharedPreferences("com.desertstar.noropefisher", Context.MODE_PRIVATE);
 
@@ -510,7 +527,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    /*SUPER UPDATE*/
+
 
 
     //Method to get phone's UUID
