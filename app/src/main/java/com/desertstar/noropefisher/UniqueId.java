@@ -2,6 +2,7 @@ package com.desertstar.noropefisher;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
 
 import java.util.UUID;
 
@@ -27,7 +28,6 @@ public class UniqueId {
                 sID = generateAndStoreUserId(pref);
 //                firstTime = false;
             }
-
         }
         return sID;
     }
@@ -38,6 +38,8 @@ public class UniqueId {
 
     private synchronized static String generateAndStoreUserId(SharedPreferences pref) {
         String id = UUID.randomUUID().toString();
+        byte [] input = id.getBytes();
+        Base64.encodeToString(input, Base64.NO_PADDING);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(ID_KEY, id);
         editor.commit();
