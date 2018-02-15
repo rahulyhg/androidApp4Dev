@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -147,6 +148,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //Custom Adapter with list2 as parameter
         final ListViewAdapter adapter2 = new ListViewAdapter(this, list2);
+
+//
+//        final Handler handler = new Handler();
+//        handler.postDelayed( new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                adapter2.notifyDataSetChanged();
+//                Log.d("updated","updated");
+//                handler.postDelayed( this, 1 * 1000 );
+//            }
+//        }, 1 * 1000 );
 
         //TextView for AlertDialogs' Titles
         final TextView title = new TextView(this);
