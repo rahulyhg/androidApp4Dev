@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 
 import android.widget.AdapterView;
 
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -103,6 +104,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Deployment clickedDeploymentData;
     public static final String EXTRA_MESSAGE = "com.desertstar.noropefisher.MESSAGE";
     SharedPreferences settings;
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+    boolean showinMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +153,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Custom Adapter with list2 as parameter
         final ListViewAdapter adapter2 = new ListViewAdapter(this, list2);
 
+
+
+
 //
 //        final Handler handler = new Handler();
 //        handler.postDelayed( new Runnable() {
@@ -167,6 +174,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //Setting up the adapter into the ListView
         listView.setAdapter(adapter2);
+
+        listView.postDelayed(new Runnable() {
+            public void run() {
+                final Deployment user = new Deployment("","" ,"",0.0,0.0, 0,0.0,new Date() );
+                mDatabase.child("deployments").child("u").setValue(user);
+                Log.d("23", "updated");
+                listView.postDelayed(this, 5000);
+            }
+        }, 5000);
 
         try {
             //BEGINNING OF ONCLICK EVENT LISTENER
@@ -224,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     });
 
                     //START OF MAIN DIALOG
-                    //Dialog with CANCEL , RELEASE and DETAILS (inside another dialog with MAP, CANCEL and RELEASE buttons) buttons
+                    //Dialog with CANCEL , RELEASE and DETAILS buttons (inside another dialog with MAP, CANCEL and RELEASE buttons)
                     AlertDialog dialog5 = new AlertDialog.Builder(MainActivity.this).setCustomTitle(title2).setMessage("" +
                             "Gear  #" + gearN + "\n" +
                             "from fisher " + fisherName + "\n" +
@@ -258,6 +274,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                                    //String message = editText.getText().toString();
 //                                    intent.putExtra(EXTRA_MESSAGE, "algo");
 //                                    startActivity(intent);
+                                    displayMap();
+                                    /*
+                                    Button p1_button = (Button)findViewById(R.id.buttonDeploy);
+                                    p1_button.setText("Back");
+
+
                                     GoogleMapOptions options = new GoogleMapOptions();
                                     options.mapType(GoogleMap.MAP_TYPE_SATELLITE)
                                             .compassEnabled(false)
@@ -284,6 +306,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     selectedGearToBeShownOnMap = g;
                                     latLng = la +", " + lo;
                                     BRISBANE = new LatLng(Double.valueOf(la), Double.valueOf(lo));
+                                    showinMap = true;
+                                    */
 
                                 }
                             }).setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -338,6 +362,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+
                 fillListView(dataSnapshot, 3);
             }
 
@@ -388,11 +413,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //Method for START DEPLOYMENT button. It leads to DeployActivity
     public void goToDeployment(View view) {
-        Intent intent = new Intent(this, DeployActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.editText);
-        //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
+        if(showinMap){
+            Intent intent = new Intent(this, MainActivity.class);
+            //EditText editText = (EditText) findViewById(R.id.editText);
+            //String message = editText.getText().toString();
+            //intent.putExtra(EXTRA_MESSAGE, message);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(this, DeployActivity.class);
+            //EditText editText = (EditText) findViewById(R.id.editText);
+            //String message = editText.getText().toString();
+            //intent.putExtra(EXTRA_MESSAGE, message);
+            startActivity(intent);
+        }
     }
 
     //Method to get phone's geolocation
@@ -440,6 +473,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //Method to fill a list view with a given DataSnapshot and case (added, changed or removed)
     public void fillListView(DataSnapshot dataSnapshot, int addedChangedRemoved) {
+        Log.d("23", "ON FILL");
+
         Deployment d = dataSnapshot.getValue(Deployment.class);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         double location[] = getLocation();
@@ -582,9 +617,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     setDialog(dialog45, 25, 20, 0, 0);
                 } else {
                     FirebaseDatabase.getInstance().getReference("deployments/" + fisherName + "-" + g).removeValue();
-                    AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want directions to it?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    AlertDialog dialog2 = new AlertDialog.Builder(MainActivity.this).setMessage("Trap Released \nDo you want to see it on a map?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            startDirections(la, lo);
+                            displayMap();
+                            //startDirections(la, lo);
                         }
                     }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -675,4 +711,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .snippet("Population: 2,074,200"));
 
     }
+
+    private void displayMap(){
+        Button p1_button = (Button)findViewById(R.id.buttonDeploy);
+        p1_button.setText("Back");
+
+
+        GoogleMapOptions options = new GoogleMapOptions();
+        options.mapType(GoogleMap.MAP_TYPE_SATELLITE)
+                .compassEnabled(false)
+                .rotateGesturesEnabled(false)
+                .tiltGesturesEnabled(false);
+        MapFragment mMapFragment = MapFragment.newInstance(options);
+        FragmentTransaction fragmentTransaction =
+                getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.map, mMapFragment);
+        fragmentTransaction.commit();
+
+//                                    MapFragment mapFragment = (MapFragment) getFragmentManager()
+//                                            .findFragmentById(R.id.map);
+        mMapFragment.getMapAsync(MainActivity.this);
+
+        if (MainActivity.this.mMap != null) {
+            LatLng sydney = new LatLng(37.339800, -121.879220);
+
+            MainActivity.this.mMap.addMarker(new MarkerOptions().position(sydney)
+                    .title("Iker marker"));
+        } else {
+            Log.d("null", "es null");
+        }
+        selectedGearToBeShownOnMap = g;
+        latLng = la +", " + lo;
+        BRISBANE = new LatLng(Double.valueOf(la), Double.valueOf(lo));
+        showinMap = true;
+    }
+
 }
