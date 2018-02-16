@@ -177,8 +177,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         listView.postDelayed(new Runnable() {
             public void run() {
-                final Deployment user = new Deployment("","" ,"",0.0,0.0, 0,0.0,new Date() );
-                mDatabase.child("deployments").child("u").setValue(user);
+
                 Log.d("23", "updated");
                 listView.postDelayed(this, 5000);
             }
@@ -346,36 +345,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.d("error", e.getCause().toString());
         }//END OF new OnItemClickListener() EVENT LISTENER
 
-        //GETTING REFERENCE TO FIREBASE DATABASE WITH ALL THE DEPLOYMENTS.
-        dref = FirebaseDatabase.getInstance().getReference("deployments");
-        //ADDING listener to the DB reference, add child event listener <-IMPORTANT to notice what kind of event.
-        dref.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-                fillListView(dataSnapshot, 1);
-            }
+        settingFirebaseListener();
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                fillListView(dataSnapshot, 2);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                fillListView(dataSnapshot, 3);
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        //GETTING REFERENCE TO FIREBASE DATABASE WITH ALL THE DEPLOYMENTS.
+//        dref = FirebaseDatabase.getInstance().getReference("deployments");
+//        //ADDING listener to the DB reference, add child event listener <-IMPORTANT to notice what kind of event.
+//        dref.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+//                fillListView(dataSnapshot, 1);
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                fillListView(dataSnapshot, 2);
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                fillListView(dataSnapshot, 3);
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }//END OF onCreate
 
     //Method to sort an array of HashMaps with String,String Key-Value relationship
@@ -746,4 +747,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         showinMap = true;
     }
 
+    public void settingFirebaseListener(){
+        //GETTING REFERENCE TO FIREBASE DATABASE WITH ALL THE DEPLOYMENTS.
+        dref = FirebaseDatabase.getInstance().getReference("deployments");
+        //ADDING listener to the DB reference, add child event listener <-IMPORTANT to notice what kind of event.
+        dref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                fillListView(dataSnapshot, 1);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                fillListView(dataSnapshot, 2);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                fillListView(dataSnapshot, 3);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }
