@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public GoogleMap mMap;
     private ArrayList<HashMap<String, String>> list2;
+    private ArrayList<HashMap<String, String>> listGLOBAL;
     private ArrayList<LatLng> listOfLocations;
     ListViewAdapter adapterGlobal;
     String fisherName = "Fisher1";
@@ -155,18 +156,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-
 //
 //        final Handler handler = new Handler();
 //        handler.postDelayed( new Runnable() {
-//
 //            @Override
 //            public void run() {
-//                adapter2.notifyDataSetChanged();
-//                Log.d("updated","updated");
-//                handler.postDelayed( this, 1 * 1000 );
+////                finish();
+////                startActivity(starterIntent);
+//                Log.d("","Entramos en bucle");
+//                //elMethodQueMeVaASalvar();
+//                handler.postDelayed( this, 10 * 1000 );
 //            }
-//        }, 1 * 1000 );
+//        }, 10 * 1000 );
 
         //TextView for AlertDialogs' Titles
         final TextView title = new TextView(this);
@@ -175,13 +176,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Setting up the adapter into the ListView
         listView.setAdapter(adapter2);
 
-        listView.postDelayed(new Runnable() {
-            public void run() {
-
-                Log.d("23", "updated");
-                listView.postDelayed(this, 5000);
-            }
-        }, 5000);
+//        listView.postDelayed(new Runnable() {
+//            public void run() {
+//                Log.d("23", "updateando");
+////                elMethodQueMeVaASalvar();
+//                finish();
+//                startActivity(starterIntent);
+//                listView.postDelayed(this, 5000);
+//            }
+//        }, 5000);
 
         try {
             //BEGINNING OF ONCLICK EVENT LISTENER
@@ -394,12 +397,41 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    //Method to sort an array of HashMaps with String,String Key-Value relationship
+    public void sortListByLocation(HashMap<String, String>[] listToSort) {
+        double location[] = getLocation();
+        final double lat = location[0];
+        final double longi = location[1];
+
+        Arrays.sort(listToSort, new Comparator<HashMap<String, String>>() {
+            public int compare(HashMap<String, String> o1, HashMap<String, String> o2) {
+
+                String t1 = o1.get("Fourth");
+                String t2 = o2.get("Fifth");
+
+                String t11 = o1.get("Fourth");
+                String t22 = o2.get("Fifth");
+
+
+                double d1 = Double.valueOf(t1);
+                double d2 = Double.valueOf(t2);
+                double d11 = Double.valueOf(t11);
+                double d22 = Double.valueOf(t22);
+
+                DistanceCalculator calculator = new DistanceCalculator();
+                double dist1 = calculator.distance(d1, lat, d2, longi, 0, 0);
+                double dist2 = calculator.distance(d11, lat, d22, longi, 0, 0);
+
+                return (dist1 > dist2) ? 1 : -1;
+            }
+        });
+    }
+
     //Method to add days to a given Date
     public static Date addDays(Date date, int days) {
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(date);
         cal.add(Calendar.DATE, days);
-
         return cal.getTime();
     }
 
@@ -455,7 +487,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 ((EditText) findViewById(R.id.etLocationLat)).setText("Unable to find correct location.");
                 ((EditText) findViewById(R.id.etLocationLong)).setText("Unable to find correct location. ");
             }
-
         }
         return result;
     }
@@ -475,7 +506,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Method to fill a list view with a given DataSnapshot and case (added, changed or removed)
     public void fillListView(DataSnapshot dataSnapshot, int addedChangedRemoved) {
         Log.d("23", "ON FILL");
-
         Deployment d = dataSnapshot.getValue(Deployment.class);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         double location[] = getLocation();
@@ -516,6 +546,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             String res2 = df2.format(dist * 0.53996);
             temp.put(THIRD_COLUMN, res2);
+            temp.put("Fourth",String.valueOf(d.latitude));
+            temp.put("Fifth",String.valueOf(d.longitude));
             LatLng theLocation = new LatLng(d.getLatitude(), d.getLongitude());
 
             if (addedChangedRemoved == 2) {
@@ -549,13 +581,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                  adapter2.notifyDataSetChanged();
             listView.setAdapter(adapter3);
             adapterGlobal = (ListViewAdapter) listView.getAdapter();
+            listGLOBAL = list2;
             adapter3.notifyDataSetChanged();
         }
     }
 
     //Method to set up a given dialog with a given size for message and buttons 1,2 and 3 if exist
     public void setDialog(AlertDialog dialog78, int messageSize, int button1Size, int button2Size, int button3Size) {
-
         TextView textView = dialog78.findViewById(android.R.id.message);
         if (textView != null) {
             textView.setTextSize(messageSize);
@@ -575,9 +607,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             textViewButton3.setTextSize(button3Size);
         }
     }
-
-
-
 
     //Method to get phone's UUID
     public String getPhoneUuid() {
@@ -637,7 +666,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     setDialog(dialog2, 25, 25, 25, 0);
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -690,8 +718,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .add(new LatLng(currentLocation[0], currentLocation[1]), BRISBANE)
                 .width(5)
                 .color(Color.BLUE));
-
-
     }
 
     private void pointToPosition(LatLng position, GoogleMap mGoogleMap) {
@@ -716,7 +742,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void displayMap(){
         Button p1_button = (Button)findViewById(R.id.buttonDeploy);
         p1_button.setText("Back");
-
 
         GoogleMapOptions options = new GoogleMapOptions();
         options.mapType(GoogleMap.MAP_TYPE_SATELLITE)
@@ -778,5 +803,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
+    }
+
+    public void elMethodQueMeVaASalvar(){
+        Log.d("","Y VENGA");
+        HashMap<String, String>[] harr = listGLOBAL.toArray(new HashMap[listGLOBAL.size()]);
+        sortListByLocation(harr);
+        ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<>();
+
+        for (int i = 0; i < list2.size(); i++) {
+            orderedlist2.add(harr[i]);
+        }
+
+        listGLOBAL = orderedlist2;//new ArrayList(Arrays.asList(harr));
+
+        for (HashMap map: listGLOBAL) {
+            Log.d("",map.toString());
+        }
+
+        ListViewAdapter adapterro = new ListViewAdapter(this,listGLOBAL);
+        listView.setAdapter(adapterro);
+        adapterro.notifyDataSetChanged();
+        Log.d("","PRINTEADO");
     }
 }
