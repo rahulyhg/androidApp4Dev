@@ -453,11 +453,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //intent.putExtra(EXTRA_MESSAGE, message);
             startActivity(intent);
         }else {
-            Intent intent = new Intent(this, DeployActivity.class);
-            //EditText editText = (EditText) findViewById(R.id.editText);
-            //String message = editText.getText().toString();
-            //intent.putExtra(EXTRA_MESSAGE, message);
-            startActivity(intent);
+
+            AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).setMessage("Single or Trawl?")
+                    .setPositiveButton("Trawl", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Intent intent = new Intent(MainActivity.this, TrollActivity.class);
+                    startActivity(intent);
+                }
+            })
+                    .setNegativeButton("Single", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(MainActivity.this, DeployActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .show();
+            setDialog(dialog,25,25,25,0);
+//            Intent intent = new Intent(this, DeployActivity.class);
+//            startActivity(intent);
         }
     }
 

@@ -7,16 +7,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:backupAgent="MyBackupAgent"
-        android:restoreAnyVersion="true"
         android:allowBackup="true"
+        android:backupAgent=".MyBackupAgent"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:restoreAnyVersion="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIdLvFVwVP7BiL4XOGEcL9H0kchl3dHwCfwKoV_A" />
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAIdLvFVwVP7BiL4XOGEcL9H0kchl3dHwCfwKoV_A" />
 
         <activity
             android:name=".SplashActivity"
@@ -51,7 +52,8 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
+        <activity android:name=".TrollActivity"></activity>
     </application>
 
 </manifest>
