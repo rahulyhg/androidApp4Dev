@@ -156,18 +156,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-//
-//        final Handler handler = new Handler();
-//        handler.postDelayed( new Runnable() {
-//            @Override
-//            public void run() {
-////                finish();
-////                startActivity(starterIntent);
-//                Log.d("","Entramos en bucle");
-//                //elMethodQueMeVaASalvar();
-//                handler.postDelayed( this, 10 * 1000 );
-//            }
-//        }, 10 * 1000 );
+
+        final Handler handler = new Handler();
+        handler.postDelayed( new Runnable() {
+            @Override
+            public void run() {
+//                finish();
+//                startActivity(starterIntent);
+                Log.d("","Entramos en bucle");
+                elMethodQueMeVaASalvar();
+                handler.postDelayed( this, 3 * 1000 );
+            }
+        }, 3 * 1000 );
 
         //TextView for AlertDialogs' Titles
         final TextView title = new TextView(this);
@@ -397,6 +397,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+
+    public void inflateHashWithNewDit(HashMap<String, String>[] listToSort){
+        double location[] = getLocation();
+        final double myLat = location[0];
+        final double myLongi = location[1];
+        DecimalFormat df2 = new DecimalFormat(".##");
+        double dist = 0;//OJO
+        DistanceCalculator calculator = new DistanceCalculator();
+
+        for (HashMap<String, String> a : listToSort) {
+            dist = calculator.distance(Double.valueOf(a.get("Fourth")), myLat, Double.valueOf(a.get("Fifth")), myLongi, 0, 0);
+            dist = dist / 1000;
+            String res2 = df2.format(dist * 0.53996);
+            a.put(THIRD_COLUMN, res2);
+        }
+
+    }
+
     //Method to sort an array of HashMaps with String,String Key-Value relationship
     public void sortListByLocation(HashMap<String, String>[] listToSort) {
         double location[] = getLocation();
@@ -444,6 +462,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         startActivity(intent);
     }
 
+
+    public void goToDrawer(View view){
+        Intent intent = new Intent(MainActivity.this, principal.class);
+        startActivity(intent);
+    }
     //Method for START DEPLOYMENT button. It leads to DeployActivity
     public void goToDeployment(View view) {
         if(showinMap){
@@ -822,7 +845,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void elMethodQueMeVaASalvar(){
         Log.d("","Y VENGA");
         HashMap<String, String>[] harr = listGLOBAL.toArray(new HashMap[listGLOBAL.size()]);
-        sortListByLocation(harr);
+        inflateHashWithNewDit(harr);
+        sortList(harr);
         ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<>();
 
         for (int i = 0; i < list2.size(); i++) {
