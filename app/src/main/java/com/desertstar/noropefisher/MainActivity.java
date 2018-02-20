@@ -161,13 +161,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         handler.postDelayed( new Runnable() {
             @Override
             public void run() {
-//                finish();
-//                startActivity(starterIntent);
-                Log.d("","Entramos en bucle");
+                Log.d("ffffffffff","Entramos en bucle");
                 elMethodQueMeVaASalvar();
-                handler.postDelayed( this, 3 * 1000 );
+                handler.postDelayed( this, 60 * 1000 );
             }
-        }, 3 * 1000 );
+        }, 60 * 1000 );
+
+//        final Handler handler1 = new Handler();
+//        handler.postDelayed( new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.d("ffffffffff","tic");
+//                handler1.postDelayed( this, 1 * 1000 );
+//            }
+//        }, 1 * 1000 );
 
         //TextView for AlertDialogs' Titles
         final TextView title = new TextView(this);
@@ -416,34 +423,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //Method to sort an array of HashMaps with String,String Key-Value relationship
-    public void sortListByLocation(HashMap<String, String>[] listToSort) {
-        double location[] = getLocation();
-        final double lat = location[0];
-        final double longi = location[1];
-
-        Arrays.sort(listToSort, new Comparator<HashMap<String, String>>() {
-            public int compare(HashMap<String, String> o1, HashMap<String, String> o2) {
-
-                String t1 = o1.get("Fourth");
-                String t2 = o2.get("Fifth");
-
-                String t11 = o1.get("Fourth");
-                String t22 = o2.get("Fifth");
-
-
-                double d1 = Double.valueOf(t1);
-                double d2 = Double.valueOf(t2);
-                double d11 = Double.valueOf(t11);
-                double d22 = Double.valueOf(t22);
-
-                DistanceCalculator calculator = new DistanceCalculator();
-                double dist1 = calculator.distance(d1, lat, d2, longi, 0, 0);
-                double dist2 = calculator.distance(d11, lat, d22, longi, 0, 0);
-
-                return (dist1 > dist2) ? 1 : -1;
-            }
-        });
-    }
+//    public void sortListByLocation(HashMap<String, String>[] listToSort) {
+//        double location[] = getLocation();
+//        final double lat = location[0];
+//        final double longi = location[1];
+//
+//        Arrays.sort(listToSort, new Comparator<HashMap<String, String>>() {
+//            public int compare(HashMap<String, String> o1, HashMap<String, String> o2) {
+//
+//                String t1 = o1.get("Fourth");
+//                String t2 = o2.get("Fifth");
+//
+//                String t11 = o1.get("Fourth");
+//                String t22 = o2.get("Fifth");
+//
+//
+//                double d1 = Double.valueOf(t1);
+//                double d2 = Double.valueOf(t2);
+//                double d11 = Double.valueOf(t11);
+//                double d22 = Double.valueOf(t22);
+//
+//                DistanceCalculator calculator = new DistanceCalculator();
+//                double dist1 = calculator.distance(d1, lat, d2, longi, 0, 0);
+//                double dist2 = calculator.distance(d11, lat, d22, longi, 0, 0);
+//
+//                return (dist1 > dist2) ? 1 : -1;
+//            }
+//        });
+//    }
 
     //Method to add days to a given Date
     public static Date addDays(Date date, int days) {
@@ -454,19 +461,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //Method to launch google maps with a given Latitude and Longitude
-    public void startDirections(String la, String lo) {
-        Intent intent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("https://www.google.com/maps/dir/?api=1&destination=" + la + "," + lo + "&travelmode=driving&dir_action=navigate&travelmode"));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK & Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-        startActivity(intent);
-    }
+//    public void startDirections(String la, String lo) {
+//        Intent intent = new Intent(Intent.ACTION_VIEW,
+//                Uri.parse("https://www.google.com/maps/dir/?api=1&destination=" + la + "," + lo + "&travelmode=driving&dir_action=navigate&travelmode"));
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK & Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+//        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+//        startActivity(intent);
+//    }
 
 
-    public void goToDrawer(View view){
-        Intent intent = new Intent(MainActivity.this, principal.class);
-        startActivity(intent);
-    }
+//    public void goToSomewhere(View view){
+//        Intent intent = new Intent(MainActivity.this, principal.class);
+//        startActivity(intent);
+//    }
+
     //Method for START DEPLOYMENT button. It leads to DeployActivity
     public void goToDeployment(View view) {
         if(showinMap){
@@ -843,7 +851,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void elMethodQueMeVaASalvar(){
-        Log.d("","Y VENGA");
+        Log.d("ven","Y VENGA");
         HashMap<String, String>[] harr = listGLOBAL.toArray(new HashMap[listGLOBAL.size()]);
         inflateHashWithNewDit(harr);
         sortList(harr);
@@ -856,12 +864,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         listGLOBAL = orderedlist2;//new ArrayList(Arrays.asList(harr));
 
         for (HashMap map: listGLOBAL) {
-            Log.d("",map.toString());
+            Log.d("MAPAAAAAAA",map.toString());
         }
 
         ListViewAdapter adapterro = new ListViewAdapter(this,listGLOBAL);
         listView.setAdapter(adapterro);
         adapterro.notifyDataSetChanged();
-        Log.d("","PRINTEADO");
+        Log.d("pr","PRINTEADO");
     }
 }
