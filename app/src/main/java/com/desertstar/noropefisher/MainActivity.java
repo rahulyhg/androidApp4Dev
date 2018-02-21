@@ -870,6 +870,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ListViewAdapter adapterro = new ListViewAdapter(this,listGLOBAL);
         listView.setAdapter(adapterro);
         adapterro.notifyDataSetChanged();
+
+        list2 = listGLOBAL;
         Log.d("pr","PRINTEADO");
     }
 }
