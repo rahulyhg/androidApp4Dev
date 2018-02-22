@@ -1,0 +1,204 @@
+{
+  "deployments" : {
+    "Preston-23" : {
+      "deploymentDate" : {
+        "date" : 16,
+        "day" : 5,
+        "hours" : 11,
+        "minutes" : 52,
+        "month" : 1,
+        "seconds" : 31,
+        "time" : 1518810751673,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 432,
+      "gearNumber" : "23",
+      "id" : "Preston",
+      "latitude" : 36.6717694,
+      "longitude" : -121.7743378,
+      "uuid" : "MjAxYTMzYWUtM2QzZi00M2I5LThkYzItNTk2M2RiMDRhNGMx\n    ",
+      "visibilityRange" : 94
+    },
+    "cs-23" : {
+      "deploymentDate" : {
+        "date" : 16,
+        "day" : 5,
+        "hours" : 12,
+        "minutes" : 21,
+        "month" : 1,
+        "seconds" : 20,
+        "time" : 1518812480771,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 432,
+      "gearNumber" : "23",
+      "id" : "cs",
+      "latitude" : 36.6543372,
+      "longitude" : -121.7974699,
+      "uuid" : "MjAxYTMzYWUtM2QzZi00M2I5LThkYzItNTk2M2RiMDRhNGMx\n    ",
+      "visibilityRange" : 94
+    },
+    "dss-23" : {
+      "deploymentDate" : {
+        "date" : 16,
+        "day" : 5,
+        "hours" : 11,
+        "minutes" : 39,
+        "month" : 1,
+        "seconds" : 32,
+        "time" : 1518809972996,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 432,
+      "gearNumber" : "23",
+      "id" : "dss",
+      "latitude" : 36.6777601,
+      "longitude" : -121.7620258,
+      "uuid" : "MjAxYTMzYWUtM2QzZi00M2I5LThkYzItNTk2M2RiMDRhNGMx\n    ",
+      "visibilityRange" : 94
+    },
+    "dss2-26" : {
+      "deploymentDate" : {
+        "date" : 19,
+        "day" : 1,
+        "hours" : 12,
+        "minutes" : 35,
+        "month" : 1,
+        "seconds" : 5,
+        "time" : 1519072505934,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 432,
+      "gearNumber" : "26",
+      "id" : "dss2",
+      "latitude" : 36.6777729,
+      "longitude" : -121.7620147,
+      "uuid" : "MjAxYTMzYWUtM2QzZi00M2I5LThkYzItNTk2M2RiMDRhNGMx\n    ",
+      "visibilityRange" : 94
+    },
+    "gas-23" : {
+      "deploymentDate" : {
+        "date" : 16,
+        "day" : 5,
+        "hours" : 12,
+        "minutes" : 26,
+        "month" : 1,
+        "seconds" : 0,
+        "time" : 1518812760672,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 432,
+      "gearNumber" : "23",
+      "id" : "gas",
+      "latitude" : 36.664749,
+      "longitude" : -121.7784517,
+      "uuid" : "MjAxYTMzYWUtM2QzZi00M2I5LThkYzItNTk2M2RiMDRhNGMx\n    ",
+      "visibilityRange" : 94
+    },
+    "parAer-23" : {
+      "deploymentDate" : {
+        "date" : 16,
+        "day" : 5,
+        "hours" : 10,
+        "minutes" : 52,
+        "month" : 1,
+        "seconds" : 23,
+        "time" : 1518807143716,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 432,
+      "gearNumber" : "23",
+      "id" : "parAer",
+      "latitude" : 36.678556,
+      "longitude" : -121.7649732,
+      "uuid" : "MjAxYTMzYWUtM2QzZi00M2I5LThkYzItNTk2M2RiMDRhNGMx\n    ",
+      "visibilityRange" : 94
+    },
+    "parSch-23" : {
+      "deploymentDate" : {
+        "date" : 16,
+        "day" : 5,
+        "hours" : 11,
+        "minutes" : 19,
+        "month" : 1,
+        "seconds" : 19,
+        "time" : 1518808759140,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 432,
+      "gearNumber" : "23",
+      "id" : "parSch",
+      "latitude" : 36.6732007,
+      "longitude" : -121.764029,
+      "uuid" : "MjAxYTMzYWUtM2QzZi00M2I5LThkYzItNTk2M2RiMDRhNGMx\n    ",
+      "visibilityRange" : 94
+    },
+    "parSky-23" : {
+      "deploymentDate" : {
+        "date" : 16,
+        "day" : 5,
+        "hours" : 10,
+        "minutes" : 57,
+        "month" : 1,
+        "seconds" : 31,
+        "time" : 1518807451875,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 432,
+      "gearNumber" : "23",
+      "id" : "parSky",
+      "latitude" : 36.6812119,
+      "longitude" : -121.7697623,
+      "uuid" : "MjAxYTMzYWUtM2QzZi00M2I5LThkYzItNTk2M2RiMDRhNGMx\n    ",
+      "visibilityRange" : 94
+    },
+    "rd2-23" : {
+      "deploymentDate" : {
+        "date" : 16,
+        "day" : 5,
+        "hours" : 11,
+        "minutes" : 5,
+        "month" : 1,
+        "seconds" : 57,
+        "time" : 1518807957957,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 432,
+      "gearNumber" : "23",
+      "id" : "rd2",
+      "latitude" : 36.6734839,
+      "longitude" : -121.7647119,
+      "uuid" : "MjAxYTMzYWUtM2QzZi00M2I5LThkYzItNTk2M2RiMDRhNGMx\n    ",
+      "visibilityRange" : 94
+    },
+    "res3-23" : {
+      "deploymentDate" : {
+        "date" : 16,
+        "day" : 5,
+        "hours" : 11,
+        "minutes" : 8,
+        "month" : 1,
+        "seconds" : 32,
+        "time" : 1518808112505,
+        "timezoneOffset" : 480,
+        "year" : 118
+      },
+      "expirationTime" : 432,
+      "gearNumber" : "23",
+      "id" : "res3",
+      "latitude" : 36.6701017765151,
+      "longitude" : -121.76045429579975,
+      "uuid" : "MjAxYTMzYWUtM2QzZi00M2I5LThkYzItNTk2M2RiMDRhNGMx\n    ",
+      "visibilityRange" : 94
+    }
+  }
+}
