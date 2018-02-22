@@ -34,8 +34,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -47,6 +51,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -108,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     boolean showinMap;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Location globalLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,19 +161,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //Custom Adapter with list2 as parameter
         final ListViewAdapter adapter2 = new ListViewAdapter(this, list2);
+        GoogleApiClient localGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).build();
+        startService(new Intent(MainActivity.this, MyService.class));
 
 
 
-
-        final Handler handler = new Handler();
-        handler.postDelayed( new Runnable() {
-            @Override
-            public void run() {
-                Log.d("ffffffffff","Entramos en bucle");
-                elMethodQueMeVaASalvar();
-                handler.postDelayed( this, 60 * 1000 );
-            }
-        }, 60 * 1000 );
+//        final Handler handler = new Handler();
+//        handler.postDelayed( new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.d("ffffffffff","Entramos en bucle");
+//                elMethodQueMeVaASalvar();
+//                handler.postDelayed( this, 60 * 1000 );
+//            }
+//        }, 60 * 1000 );
 
 //        final Handler handler1 = new Handler();
 //        handler.postDelayed( new Runnable() {
@@ -403,7 +412,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-
 
     public void inflateHashWithNewDit(HashMap<String, String>[] listToSort){
         double location[] = getLocation();
