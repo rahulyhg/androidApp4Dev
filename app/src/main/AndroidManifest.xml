@@ -63,6 +63,7 @@
             android:name=".principal"
             android:label="@string/title_activity_principal"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <service android:name=".MyService" android:process=":my_service" />
     </application>
 
 </manifest>

@@ -5,9 +5,11 @@ package com.desertstar.noropefisher;
 
 import android.Manifest;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -19,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     static final int REQUEST_LOCATION = 1;
     static final int MAX_DISTANCE_RANGE = 700003;
     LocationManager locationManager;
+    static final String TAG= "IKER MSG: ";
 
 
     //Firebase db Reference
@@ -116,6 +120,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     boolean showinMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location globalLocation;
+
+//    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            // Get extra data included in the Intent
+//            String message = intent.getStringExtra("locationKey");
+////            tvStatus.setText(message);
+//             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+//        }
+//    };
+
+    MyReceiver myReceiver;
+
+    String datapassed="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,17 +182,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient localGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).build();
         startService(new Intent(MainActivity.this, MyService.class));
 
+//        LocalBroadcastManager.getInstance(this).registerReceiver( mMessageReceiver, new IntentFilter("locationKey"));
 
-
-//        final Handler handler = new Handler();
-//        handler.postDelayed( new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.d("ffffffffff","Entramos en bucle");
-//                elMethodQueMeVaASalvar();
-//                handler.postDelayed( this, 60 * 1000 );
-//            }
-//        }, 60 * 1000 );
+        final Handler handler = new Handler();
+        handler.postDelayed( new Runnable() {
+            @Override
+            public void run() {
+                Log.d("ffffffffff","Entramos en bucle");
+                elMethodQueMeVaASalvar();
+                handler.postDelayed( this, 3 * 1000 );
+            }
+        }, 3 * 1000 );
 
 //        final Handler handler1 = new Handler();
 //        handler.postDelayed( new Runnable() {
@@ -398,6 +416,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        });
     }//END OF onCreate
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //Register BroadcastReceiver
+        //to receive event from our service
+        myReceiver = new MyReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MyService.MY_ACTION);
+        registerReceiver(myReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("TAG", "onDestroy dentro de main");
+        stopService(new Intent(MainActivity.this,MyService.class));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopService(new Intent(MainActivity.this,MyService.class));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(new Intent(MainActivity.this, MyService.class));
+
+    }
+
     //Method to sort an array of HashMaps with String,String Key-Value relationship
     public void sortList(HashMap<String, String>[] listToSort) {
         Arrays.sort(listToSort, new Comparator<HashMap<String, String>>() {
@@ -413,21 +462,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    public void inflateHashWithNewDit(HashMap<String, String>[] listToSort){
-        double location[] = getLocation();
-        final double myLat = location[0];
-        final double myLongi = location[1];
-        DecimalFormat df2 = new DecimalFormat(".##");
-        double dist = 0;//OJO
-        DistanceCalculator calculator = new DistanceCalculator();
+    public boolean inflateHashWithNewDit(HashMap<String, String>[] listToSort){
+//        double location[] = getLocation();
 
-        for (HashMap<String, String> a : listToSort) {
-            dist = calculator.distance(Double.valueOf(a.get("Fourth")), myLat, Double.valueOf(a.get("Fifth")), myLongi, 0, 0);
-            dist = dist / 1000;
-            String res2 = df2.format(dist * 0.53996);
-            a.put(THIRD_COLUMN, res2);
+        if (!datapassed.equals("")) {
+            String[] location = datapassed.split(",");
+            Log.d(TAG,"LCOATION "+location[0] + location[1]);
+            final double myLat = Double.valueOf(location[0]);
+            final double myLongi =  Double.valueOf(location[1]);
+            DecimalFormat df2 = new DecimalFormat(".##");
+            double dist = 0;//OJO
+            DistanceCalculator calculator = new DistanceCalculator();
+
+            for (HashMap<String, String> a : listToSort) {
+                dist = calculator.distance(Double.valueOf(a.get("Fourth")), myLat, Double.valueOf(a.get("Fifth")), myLongi, 0, 0);
+                dist = dist / 1000;
+                String res2 = df2.format(dist * 0.53996);
+                a.put(THIRD_COLUMN, res2);
+            }
+            return  true;
+        }else{
+            return  false;
         }
-
     }
 
     //Method to sort an array of HashMaps with String,String Key-Value relationship
@@ -859,27 +915,50 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void elMethodQueMeVaASalvar(){
-        Log.d("ven","Y VENGA");
-        HashMap<String, String>[] harr = listGLOBAL.toArray(new HashMap[listGLOBAL.size()]);
-        inflateHashWithNewDit(harr);
-        sortList(harr);
-        ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<>();
+        Log.d(TAG,"elMethodQueMeVaASalvar");
 
-        for (int i = 0; i < list2.size(); i++) {
-            orderedlist2.add(harr[i]);
+        HashMap<String, String>[] harr = new HashMap[0];
+        if (listGLOBAL!=null) {
+            harr = listGLOBAL.toArray(new HashMap[listGLOBAL.size()]);
         }
 
-        listGLOBAL = orderedlist2;//new ArrayList(Arrays.asList(harr));
+        if (inflateHashWithNewDit(harr)) {
+            sortList(harr);
+            ArrayList<HashMap<String, String>> orderedlist2 = new ArrayList<>();
 
-        for (HashMap map: listGLOBAL) {
-            Log.d("MAPAAAAAAA",map.toString());
+            for (int i = 0; i < list2.size(); i++) {
+                orderedlist2.add(harr[i]);
+            }
+
+            listGLOBAL = orderedlist2;//new ArrayList(Arrays.asList(harr));
+
+            for (HashMap map: listGLOBAL) {
+                Log.d("MAPAAAAAAA",map.toString());
+            }
+
+            ListViewAdapter adapterro = new ListViewAdapter(this,listGLOBAL);
+            listView.setAdapter(adapterro);
+            adapterro.notifyDataSetChanged();
+
+            list2 = listGLOBAL;
+            Log.d(TAG,"PRINTEADO");
+        }
+    }
+
+    private class MyReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context arg0, Intent arg1) {
+            // TODO Auto-generated method stub
+
+            datapassed = arg1.getStringExtra("DATAPASSED");
+
+            Toast.makeText(MainActivity.this,
+                    "Triggered by Service!\n"
+                            + "Data passed: " + datapassed,
+                    Toast.LENGTH_LONG).show();
+
         }
 
-        ListViewAdapter adapterro = new ListViewAdapter(this,listGLOBAL);
-        listView.setAdapter(adapterro);
-        adapterro.notifyDataSetChanged();
-
-        list2 = listGLOBAL;
-        Log.d("pr","PRINTEADO");
     }
 }

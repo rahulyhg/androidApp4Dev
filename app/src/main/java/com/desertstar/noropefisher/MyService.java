@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,7 +20,9 @@ public class MyService extends Service
     private static final String TAG = "BOOMBOOMTESTGPS";
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 10000;
-    private static final float LOCATION_DISTANCE = 1f;
+    private static final float LOCATION_DISTANCE = 0f;
+
+    final static String MY_ACTION = "PASS_LOCATION";
 
     private class LocationListener implements android.location.LocationListener
     {
@@ -35,9 +38,20 @@ public class MyService extends Service
         public void onLocationChanged(Location location)
         {
             Log.e(TAG, "onLocationChanged: " + location);
-            Toast.makeText(MyService.this, String.valueOf(location), Toast.LENGTH_LONG).show();
+//            Toast.makeText(MyService.this, String.valueOf(location), Toast.LENGTH_LONG).show();
 
             mLastLocation.set(location);
+            sendMessageToActivity(location.getLatitude()+","+location.getLongitude());
+
+//            if (mLocationManager != null) {
+//                for (int i = 0; i < mLocationListeners.length; i++) {
+//                    try {
+//                        mLocationManager.removeUpdates(mLocationListeners[i]);
+//                    } catch (Exception ex) {
+//                        Log.i(TAG, "fail to remove location listners, ignore", ex);
+//                    }
+//                }
+//            }
         }
 
         @Override
@@ -82,19 +96,19 @@ public class MyService extends Service
     public void onCreate()
     {
         Log.e(TAG, "onCreate");
-        Toast.makeText(this, "create", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "GPS service started", Toast.LENGTH_LONG).show();
         initializeLocationManager();
         Log.e(TAG, "after init cr");
 
-        try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                    mLocationListeners[1]);
-        } catch (SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
-        }
+//        try {
+//            mLocationManager.requestLocationUpdates(
+//                    LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
+//                    mLocationListeners[1]);
+//        } catch (SecurityException ex) {
+//            Log.i(TAG, "fail to request location update, ignore", ex);
+//        } catch (IllegalArgumentException ex) {
+//            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
+//        }
         try {
             mLocationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
@@ -129,5 +143,16 @@ public class MyService extends Service
         }else{
             Log.e(TAG, "else init");
         }
+    }
+
+    private void sendMessageToActivity(String msg) {
+        Intent intent = new Intent();
+        intent.setAction(MY_ACTION);
+
+        intent.putExtra("DATAPASSED", msg);
+
+        sendBroadcast(intent);
+
+//        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 }
